@@ -1,0 +1,21 @@
+{
+  "name": "stock_market_graph",
+  "version": "1.0.0",
+  "description": "FCC project",
+  "main": "server.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hogdogthegod/StockMarketTracking.git"
+  },
+  "author": "HogDog",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hogdogthegod/StockMarketTracking/issues"
+  },
+  "homepage": "https://github.com/hogdogthegod/StockMarketTracking#readme"
+}
