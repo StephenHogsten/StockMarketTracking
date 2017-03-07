@@ -1,12 +1,14 @@
 # To Do for Submission
-* [ ] find a stock market data source
-  * [ ] get a representative json
-  * [ ] make sure we can retrieve the time range we need (day is fine)
+* [X] find a stock market data source
+  * [X] quotes and EOD based on date
+  * [X] get a representative json
+  * [X] make sure we can retrieve the time range we need (day is fine)
+* [X] read up on redux / deploying react
 * [ ] read up on gulp
-* [ ] read up on redux / deploying react
+* [ ] make app shell 
+* [ ] sketch static outline for the page in React
 * [ ] what do they mean you need web sockets
-* [ ] sketch outline for the page
-* [ ] figure out how to dynically query for a time range
+* [ ] figure out how to dynamically query for a time range
   * [ ] first use one stock, and get one specific call
   * [ ] make a function for it to work for multiple stocks
   * [ ] make the function accept a time range and get appropriate dates in the middle
