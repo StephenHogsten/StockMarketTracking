@@ -5,6 +5,13 @@
   * [X] make sure we can retrieve the time range we need (day is fine)
 * [X] read up on redux / deploying react
 * [ ] read up on gulp
+  * [ ] 
+  * [ ] 
+  * [ ] 
+  * [ ] 
+  * [ ] 
+  * [ ] 
+  * [ ] 
 * [ ] make app shell 
 * [ ] sketch static outline for the page in React
 * [ ] what do they mean you need web sockets
