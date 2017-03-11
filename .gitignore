@@ -1,2 +1,5 @@
 .env
 node_modules/
+maps/
+public/clientjs/
+public/css/

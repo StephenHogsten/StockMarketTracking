@@ -1,0 +1,12 @@
+@import 'colors';
+
+.footer-bar { 
+  color: $primary-text;
+}
+
+.footer-text {
+  margin: auto;
+  color: $primary-text;
+  padding: 10px;
+  text-align: center;
+}
