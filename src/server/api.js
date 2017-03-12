@@ -1,7 +1,6 @@
 'use strict';
 
 const express = require('express');
-const querystring = require('querystring');
 
 const apiHelper = require('./apiHelper.js');
 
@@ -27,7 +26,7 @@ apiRouter.get('/companyData', (req, res) => {
       }
     ]
   });
-  console.log(baseApiUrl + encodeURIComponent(requestParams));
+  console.log('created API url:\n' + baseApiUrl + encodeURIComponent(requestParams));
   apiHelper.get(baseApiUrl + encodeURIComponent(requestParams), (err, data) => {
     if (err) throw err;
     res.json(JSON.parse(data));
