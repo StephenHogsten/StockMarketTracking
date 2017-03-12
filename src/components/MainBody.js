@@ -47,13 +47,13 @@ class MainBody extends React.Component {
       d3.request.json('/api/companyData?' + queryString, (err, data) => {
         if (err) throw err;
         // check for error
+        // NEEDS TO BE BETTER
         if (data.hasOwnProperty('ExceptionType')) {
           console.log('error retrieving stock data for ' + oneCompany + ': ' + data.Message); // eslint-disable-line
           return;
         }
         // use React api to return a new state
         this.setState( (lastState) => {
-          console.log(data);
           let thisData = data.Elements[0].DataSeries.close.values;
           lastState.companies[oneCompany] = thisData | "ERROR";
           return lastState;

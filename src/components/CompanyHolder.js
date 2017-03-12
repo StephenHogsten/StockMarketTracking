@@ -2,7 +2,7 @@
 
 const React = require('React');
 
-class Graph extends React.Component {
+class CompanyHolder extends React.Component {
   render() {
     return (
       <div>I am the company holder (interactive legend)</div>
@@ -10,4 +10,4 @@ class Graph extends React.Component {
   }
 }
 
-module.exports = Graph;
+module.exports = CompanyHolder;

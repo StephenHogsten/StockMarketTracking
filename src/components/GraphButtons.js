@@ -2,7 +2,7 @@
 
 const React = require('React');
 
-class GraphButton extends React.Component {
+class GraphButtons extends React.Component {
   render() {
     return (
       <div id='graph-button'>
@@ -13,4 +13,4 @@ class GraphButton extends React.Component {
   }
 }
 
-module.exports = GraphButton;
+module.exports = GraphButtons;

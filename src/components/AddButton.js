@@ -2,7 +2,7 @@
 
 const React = require('React');
 
-class Graph extends React.Component {
+class AddButton extends React.Component {
   render() {
     return (
       <div>I hold the buttons to add new stocks</div>
@@ -10,4 +10,4 @@ class Graph extends React.Component {
   }
 }
 
-module.exports = Graph;
+module.exports = AddButton;
