@@ -29,14 +29,14 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
   * [X] css
   * [X] client js (hardest one!)
 * [X] make app shell 
-* [ ] sketch static outline for the page in React
+* [X] sketch static outline for the page in React
 * [ ] what do they mean you need web sockets
   * [ ] test a socket server
-* [ ] figure out how to dynamically query for a time range
-  * [ ] first use one stock, and get one specific call
-  * [ ] make a function for it to work for multiple stocks
-  * [ ] make the function accept a time range and get appropriate dates in the middle
-  * [ ] make function accept mulitple quotes to query
+* [X] figure out how to dynamically query for a time range
+  * [X] first use one stock, and get one specific call
+  * [X] make a function for it to work for multiple stocks
+  * [X] make the function accept a time range and get appropriate dates in the middle
+  * [X] make function accept mulitple quotes to query ( note: made it loop through state)
 * [ ] display the data
   * [ ] use d3 to appropriately add the points for a set amount of data
   * [ ] add the legend and the axes / make it pretty
@@ -44,6 +44,7 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
 * [ ] make it interactable
   * [ ] be able to add / remove stocks
   * [ ] be able to choose a new time range
+* [ ] make the company data API handle weird errors (RJI exists but doesn't return any data)
 
 ## Enhancement Ideas
 * [ ] save off specific set-ups to return to later
