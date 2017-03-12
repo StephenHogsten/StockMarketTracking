@@ -1,5 +1,14 @@
 body {
-  background-color: pink;
-  color: white; }
+  background-color: #dde0eb;
+  color: #3c5a5b; }
 
-/*# sourceMappingURL=../maps/main.css.map */
+.footer-bar {
+  color: #3c5a5b; }
+
+.footer-text {
+  margin: auto;
+  color: #3c5a5b;
+  padding: 10px;
+  text-align: center; }
+
+/*# sourceMappingURL=../../maps/main.css.map */

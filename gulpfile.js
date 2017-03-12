@@ -1,15 +1,15 @@
 require('dotenv').config();
 
+// const plumber = require('gulp-plumber');
 const gulp = require('gulp');
 const sass = require('gulp-sass');
 const prefix = require('gulp-autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
-// const plumber = require('gulp-plumber');
 const nodemon = require('nodemon');
 const browserSync = require('browser-sync');
 const browserify = require('browserify');
+const babelify = require('babelify');
 const watchify = require('watchify');
-// const uglify = require('gulp-uglify');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const fs = require('fs');
@@ -33,11 +33,7 @@ gulp.task('nodemon', () => {
   });
   stream
     .on('restart', () => {
-      console.log('mememe');
-      setTimeout(() => {
-        browserSync.reload();
-        console.log('we reloaded');
-      }, 5000);
+      setTimeout(browserSync.reload, 1000);
     })
     .on('crash', () => {
       // eslint-disable-next-line
@@ -47,54 +43,35 @@ gulp.task('nodemon', () => {
 });
 
 //client js
-// we mostly just want to watch the src/components/ folder and compile to the public/components/ folder
-/*gulp.task('clientjs.watch', () => {
-  gulp.watch('src/components/*.js', ['browser.bundle'], browserSync.reload);
-});
-function makeBrowserify(cb) {
-  var fileArr = [];
-  fs.readdir('./src/components', (err, files) => {
-    files.forEach( (oneFile) => {
-      fileArr.push('./src/components/' + oneFile);
-    });
-    var b = browserify({
-      entries: fileArr,
-      presets: ['babel-preset-react', 'babel-preset-es2015']
-    });
-    cb(b);
-  });
-}
-gulp.task('browser.bundle', () => {
-  makeBrowserify( (b) => {
-    b.bundle()
-      .pipe(source('bundle.js'))
-      .pipe(gulp.dest('public/components/'));
-  });
-}); */
+// we mostly just want to watch the src/clientjs/ folder and compile to the public/clientjs/ folder
 gulp.task('clientjs.build', () => {
   fs.readdir('./src/clientjs', (err, files) => {
     if (err) throw err;
-    files.forEach(setupOneBrowserify);
-    setTimeout(browserSync.reload, 1000);
+    files.forEach((val) => {
+      setupOneBrowserify(val);
+    });
   });
 });
 function setupOneBrowserify(filename) {
-  console.log('one file: ' + filename);
-  let b = watchify(browserify({
-    entries: './src/clientjs/' + filename,
-    presets: ['babel-preset-react', 'babel-preset-es2015'],
-    transforms: ['uglify'],
-    debug: true
-  })).on('update', function() {
+  filename = 'index.js';
+  let b = browserify({
+    entries: './src/clientjs/' + filename,    
+    debug: true,
+    plugin: [watchify]
+  }).transform(
+    'babelify', {presets: ['react', 'es2015']}
+  ).on('update', function() {
     bundleOneBrowserify(this);
   });
   b.filename = filename;
   bundleOneBrowserify(b);
 }
 function bundleOneBrowserify(b) {
+  let f = b.filename;
+  console.log('rebuilding client js: ' + f); // eslint-disable-line
   b.bundle()
-    .pipe(source(b.filename))
-      .pipe(buffer())
+    .pipe(source(f))
+    .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true  }))
     .pipe(sourcemaps.write('../../maps'))
     .pipe(gulp.dest('public/clientjs/'));
@@ -108,15 +85,13 @@ gulp.task('scss.watch', () => {
   });
 });
 // actually trigger rebuilding etc. for scss
-function buildSass(event) {
-  // eslint-disable-next-line
-  console.log('rebuild ' + event.path + '\n');
+function buildSass() {
   gulp.src('src/scss/main.scss')
     .pipe(sourcemaps.init())
       .pipe(sass().on('error', sass.logError))
       .pipe(prefix({ cascade: false }))
     .pipe(sourcemaps.write('../../maps'))
-    .pipe(gulp.dest('public/'))
+    .pipe(gulp.dest('public/css/'))
     .pipe(browserSync.stream());
 }
 
