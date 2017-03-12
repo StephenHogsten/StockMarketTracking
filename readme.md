@@ -24,7 +24,7 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
   * [X] read a bunch of background info
   * [X] sketch out order of things that should happen (with folder structure)
   * [X] break down pieces I can do in order
-  * [X] server js
+* [X] server js
   * [X] html
   * [X] css
   * [X] client js (hardest one!)

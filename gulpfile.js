@@ -33,7 +33,7 @@ gulp.task('nodemon', () => {
   });
   stream
     .on('restart', () => {
-      setTimeout(browserSync.reload, 5000);
+      setTimeout(browserSync.reload, 1000);
     })
     .on('crash', () => {
       // eslint-disable-next-line

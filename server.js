@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 const bodyParser = require('body-parser');
 
+const apiRouter = require('./src/server/api.js');
+
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGO_URI, (err) => {
   // eslint-disable-next-line
@@ -16,6 +18,7 @@ mongoose.connect(process.env.MONGO_URI, (err) => {
 // initialize app
 const app = express();
 
+app.use('/api', apiRouter);
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.use('/public', express.static(__dirname + '/public'));
