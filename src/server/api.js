@@ -26,7 +26,6 @@ apiRouter.get('/companyData', (req, res) => {
       }
     ]
   });
-  console.log('created API url:\n' + baseApiUrl + encodeURIComponent(requestParams));
   apiHelper.get(baseApiUrl + encodeURIComponent(requestParams), (err, data) => {
     if (err) throw err;
     res.json(JSON.parse(data));

@@ -20,9 +20,7 @@ class MainBody extends React.Component {
     };
   }
   componentDidMount() {
-    console.log('should retrieve Data');
     this.retrieveData();
-    console.log('did retrieve Data');
   }
   getCompanies() {
     // eventually we'll get this from web sockets
@@ -36,21 +34,17 @@ class MainBody extends React.Component {
   retrieveData() {
     // go through all the symbols
     Object.keys(this.state.companies).forEach((oneCompany) => {
-      console.log('checking ' + oneCompany);
       if (this.state.companies[oneCompany]) return;
       //convert dates to offsets & build query string
       let today = new Date();
       let msPerDay = 86400000;
-      let queryString = "Symbol=AAPL";
-      // querystring.stringify({
-      //   Symbol: oneCompany,
-      //   EndOffsetDays: Math.floor((this.state.endDate - today) / msPerDay),
-      //   NumberOfDays: Math.floor((this.state.endDate+1 - this.state.startDate) / msPerDay)
-      // });
-      console.log('url: ' + '/api/companyData?' + queryString);
+      let queryString = querystring.stringify({
+        Symbol: oneCompany,
+        EndOffsetDays: Math.floor((this.state.endDate - today) / msPerDay),
+        NumberOfDays: Math.floor((this.state.endDate+1 - this.state.startDate) / msPerDay)
+      });
       // request internal API info
       d3.request.json('/api/companyData?' + queryString, (err, data) => {
-        console.log('result for ' + oneCompany);
         if (err) throw err;
         // check for error
         // NEEDS TO BE BETTER
@@ -59,15 +53,10 @@ class MainBody extends React.Component {
           return;
         }
         // use React api to return a new state
-        console.log('ready to set react');
-        this.setState( (lastState) => {
-          let thisData = data.Elements[0].DataSeries.close.values;
-          lastState.companies[oneCompany] = [4, 5, 6] | "ERROR";
-          console.log('we set react');
-          console.log(thisData);
-          console.log(lastState);
-          return lastState;
-        });
+        let thisData = data.Elements[0].DataSeries.close.values;
+        let newCompanies = Object.assign({}, this.state.companies);
+        newCompanies[oneCompany] = thisData || "ERROR";
+        this.setState({companies: newCompanies});
       });
     });
   }
