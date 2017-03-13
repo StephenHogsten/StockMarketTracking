@@ -12,7 +12,7 @@ const CompanyHolder = require('../components/CompanyHolder.js');  // eslint-disa
 const AddButton = require('../components/AddButton.js');          // eslint-disable-line
 
 class MainBody extends React.Component {
-  constructor(props) {
+  constructor() {
     super();
     this.state = {
       companies: this.getCompanies(),
@@ -23,31 +23,23 @@ class MainBody extends React.Component {
       chartPending: null,
       ctx: null
     };
-    console.log('retrieve data');
     this.retrieveData();
   }
   setCtx() {
     this.setState({ ctx: document.getElementById('stock-graph') });
   }
   setChart(chart) {
-    console.log('setting chart');
     this.setState({ chart: chart });
     this.setState({ chartPending: false });
   }
   shouldMakeNewChart() {
-    console.log(this);
-    console.log('state before');
-    console.log(this.state);
     if (this.state.chart) {
-      console.log('skipping out early');
       return false;
     }
     if (this.state.chartPending) {
-      console.log('skipping out early 2');
       return false;
     }
     this.setState({ chartPending: true });
-    console.log('returning true');
     return true;
   }
   getCompanies() {
@@ -94,28 +86,19 @@ class MainBody extends React.Component {
     });
   }
   shouldComponentUpdate(nextProps, nextState) {
-    console.log('should we update?');
-    console.log(nextState);
     // wait until we have all the company data to render
     if (nextState.chartPending) {
-      console.log('no - pending');
-      console.log(nextState);
       return false;
     }
     let keys = Object.keys(nextState.companies);
     for (let i=0; i<keys.length; i++) {
       if (!nextState.companies[keys[i]]) {
-        console.log('no');
-        console.log(nextState.companies);
         return false;
       }
     }
-    console.log('yes');
     return true;
   }
   render() {
-    console.log('rendering');
-    console.log(this.state);
     return (
       <div id='main-body'>
         <GraphButtons />

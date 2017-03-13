@@ -9,7 +9,6 @@ const d3 = {
 
 class Graph extends React.Component {
   componentDidMount() {
-    console.log('triggered mount');
     this.buildGraph();
   }
   componentDidUpdate() {
@@ -27,11 +26,8 @@ class Graph extends React.Component {
         data: this.props.companies[symbol],
         spanGaps: true,
         pointHoverRadius: 6,
-        pointRadius: 4
+        pointRadius: 3.5
       });
-      console.log('symbol' + symbol);
-      console.log('idx' + idx);
-      console.log(d3.scale.schemeCategory20[idx]);
     });
     return dataset;
   }
@@ -43,7 +39,6 @@ class Graph extends React.Component {
     });
   }
   newGraph() {
-    console.log('we are atualy making one now');
     this.props.fnSetChart( new Chart(this.props.ctx, {
       type: 'line',
       data: {
@@ -63,24 +58,17 @@ class Graph extends React.Component {
     Chart.defaults.global.defaultFontColor = '#3C5A5B';
   }
   buildGraph() {
-    console.log('building new graph');
     if (!this.props.dates) {
-      console.log('no dates yet');
-      console.log(this.props);
       return;
     }
     if (!this.props.ctx) {
-      console.log('no ctx');
       this.props.fnSetCtx();
       return;     // this will retrigger update anyway
     }
-    console.log('ctx: ' + this.props.ctx);
     if (!this.props.chart) {
-      console.log('no chart - well make one');
       if (this.props.fnShouldMakeNewChart()) { this.newGraph(); }
       return;
     }
-    console.log('we actually can update a graph');
     this.props.chart.data.datasets = this.buildDatasets();
     this.props.chart.update();
   }
