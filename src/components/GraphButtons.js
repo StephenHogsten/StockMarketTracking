@@ -10,7 +10,6 @@ class GraphButtons extends React.Component {
           className='btn' 
           key='test-add'
           onClick={() => {
-            console.log('add clicked');
             this.props.socket.emit('addCompanyClient', 'AAPL')
           }}
         >Add</div>
@@ -18,7 +17,6 @@ class GraphButtons extends React.Component {
           className='btn' 
           key='test-remove'
           onClick={() => {
-            console.log('remove clicked');
             this.props.socket.emit('removeCompanyClient', 'AAPL')
           }}
         >Remove</div>

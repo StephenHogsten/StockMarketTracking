@@ -54,7 +54,6 @@ class Graph extends React.Component {
         }
       }
     }));
-    // Chart.defaults.global.defaultColor = '#3C5A5B';
     Chart.defaults.global.defaultFontColor = '#3C5A5B';
   }
   buildGraph() {
@@ -73,7 +72,6 @@ class Graph extends React.Component {
     this.props.chart.update();
   }
   render() {
-    // expect props.data to be 
     return (
       <canvas id='stock-graph' width="1000" height="500">
       </canvas>

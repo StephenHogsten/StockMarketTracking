@@ -30,14 +30,16 @@ class MainBody extends React.Component {
     this.state.socket.on('removeCompanyServer', (data) => this.removeCompany(data));
   }
   addCompany(newSymbol) {
-    console.log('adding new symbol');
+    newSymbol = newSymbol.toUpperCase();
+    if (this.state.companies.hasOwnProperty(newSymbol)) return;
     let tempCompanies = Object.assign({}, this.state.companies);
     tempCompanies[newSymbol] = null;
     this.retrieveOneDatum(newSymbol);
     this.setState({ companies: tempCompanies });
   }
   removeCompany(symbol) {
-    console.log('removing symbol');
+    symbol = symbol.toUpperCase();
+    if (!this.state.companies.hasOwnProperty(symbol)) return;
     let tempCompanies = Object.assign({}, this.state.companies);
     delete tempCompanies[symbol];
     this.setState({ companies: tempCompanies });
@@ -65,14 +67,8 @@ class MainBody extends React.Component {
       this.setState({ companies: data });
       Object.keys(data).forEach( (val) => this.retrieveOneDatum(val) );
     });
-    // return {
-    //   'ABAX': null,
-    //   'MSFT': null,
-    //   'ABCB': null
-    // };
   }
   retrieveOneDatum(oneCompany) {
-    console.log('retrieving one datum: ' + oneCompany);	
     if (this.state.companies[oneCompany]) return;
     //build internal query string
     let queryString = querystring.stringify({
@@ -85,7 +81,6 @@ class MainBody extends React.Component {
       if (err) throw err;
       // check for error - NEEDS IMPROVEMENT
       if (data.hasOwnProperty('ExceptionType')) {
-        console.log('error retrieving stock data for ' + oneCompany + ': ' + data.Message); // eslint-disable-line
         return;
       }
       // use React api to return a new state
@@ -100,7 +95,6 @@ class MainBody extends React.Component {
   }
   retrieveAllData() {
     // go through all the symbols
-    console.log(this.state.companies);	
     Object.keys(this.state.companies).forEach((symbol) => this.retrieveOneDatum(symbol));
   }
   shouldComponentUpdate(nextProps, nextState) {

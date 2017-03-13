@@ -25,12 +25,20 @@
   background-color: #b8ccea;
   color: #3c5a5b;
   border-radius: 3px;
-  min-height: 15px;
-  min-width: 30px;
+  min-height: 25px;
+  min-width: 45px;
   margin: 4px;
-  float: left; }
+  float: left;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 10px; }
 
 body {
-  background-color: #dde0eb; }
+  background-color: #dde0eb;
+  color: #3c5a5b; }
 
 /*# sourceMappingURL=../maps/main.css.map */

@@ -41,7 +41,6 @@ if (process.env.ENV_TYPE === 'PRODUCTION') {
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
-  // res.send('testme');
 });
 
 app.use((req, res) => {

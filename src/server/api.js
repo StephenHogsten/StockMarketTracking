@@ -16,19 +16,11 @@ module.exports = (io) => {
   };
   io.on('connection', (socket) => {
     let p = Math.floor(1000*Math.random());
-    console.log('user connected: ' + p);
     socket.on('addCompanyClient', (symbol) => {
-      console.log('addCompanyClient: ');
-      console.log(symbol);
       io.emit('addCompanyServer', symbol.toUpperCase());  //we should validate it first
     });
     socket.on('removeCompanyClient', (symbol) => {
-      console.log('removeCompanyClient: ');
-      console.log(symbol);
       io.emit('removeCompanyServer', symbol.toUpperCase());  //we should validate it first
-    });
-    socket.on('disconnect', () => {
-      console.log('user disconnected: ' + p);
     });
   });
 
@@ -68,22 +60,18 @@ module.exports = (io) => {
   });
   apiRouter.get('/addCompanyClient/:symbol', (req, res) => {
     io.emit('addCompanyClient', req.params.symbol);
-    console.log('adding ' + req.params.symbol);
     res.send('event emitted ' + Math.floor(1000*Math.random()));
   });
   apiRouter.get('/removeCompanyClient/:symbol', (req, res) => {
     io.emit('removeCompanyClient', req.params.symbol);
-    console.log('removing ' + req.params.symbol);
     res.send('event emitted ' + Math.floor(1000*Math.random()));
   });
   apiRouter.get('/addCompanyServer/:symbol', (req, res) => {
     io.emit('addCompanyServer', req.params.symbol);
-    console.log('adding ' + req.params.symbol);
     res.send('event emitted ' + Math.floor(1000*Math.random()));
   });
   apiRouter.get('/removeCompanyServer/:symbol', (req, res) => {
     io.emit('removeCompanyServer', req.params.symbol);
-    console.log('removing ' + req.params.symbol);
     res.send('event emitted ' + Math.floor(1000*Math.random()));
   });
 
