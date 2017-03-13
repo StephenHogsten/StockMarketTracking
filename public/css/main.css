@@ -11,4 +11,8 @@ body {
   padding: 10px;
   text-align: center; }
 
+#stock-graph {
+  max-width: 1000px;
+  max-height: 500px; }
+
 /*# sourceMappingURL=../../maps/main.css.map */

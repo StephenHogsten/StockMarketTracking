@@ -8,7 +8,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const nodemon = require('nodemon');
 const browserSync = require('browser-sync');
 const browserify = require('browserify');
-const babelify = require('babelify');
+// const babelify = require('babelify');
 const watchify = require('watchify');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
@@ -33,7 +33,7 @@ gulp.task('nodemon', () => {
   });
   stream
     .on('restart', () => {
-      setTimeout(browserSync.reload, 1000);
+      setTimeout(browserSync.reload, 1500);
     })
     .on('crash', () => {
       // eslint-disable-next-line
@@ -73,7 +73,7 @@ function bundleOneBrowserify(b) {
     .pipe(source(f))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true  }))
-    .pipe(sourcemaps.write('../../maps'))
+    .pipe(sourcemaps.write('../maps'))
     .pipe(gulp.dest('public/clientjs/'));
 }
 
@@ -90,7 +90,7 @@ function buildSass() {
     .pipe(sourcemaps.init())
       .pipe(sass().on('error', sass.logError))
       .pipe(prefix({ cascade: false }))
-    .pipe(sourcemaps.write('../../maps'))
+    .pipe(sourcemaps.write('../maps'))
     .pipe(gulp.dest('public/css/'))
     .pipe(browserSync.stream());
 }
