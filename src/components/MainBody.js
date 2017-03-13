@@ -16,7 +16,7 @@ class MainBody extends React.Component {
   constructor() {
     super();
     this.state = {
-      companies: this.getCompanies(),
+      companies: {},
       EndOffsetDays: 0,   //default to last 90 days
       NumberOfDays: 90,
       dates: null,         // this is tricky because we skip holidays and weekends
@@ -25,7 +25,7 @@ class MainBody extends React.Component {
       ctx: null,
       socket: socketio()
     };
-    this.retrieveAllData();
+    this.getCompanies();
     this.state.socket.on('addCompanyServer', (data) => this.addCompany(data));
     this.state.socket.on('removeCompanyServer', (data) => this.removeCompany(data));
   }
@@ -60,15 +60,16 @@ class MainBody extends React.Component {
     return true;
   }
   getCompanies() {
-    // d3.request.json('/api/allSymbols', (err, data) => {
-    //   if (err) throw err;
-    //   return data;
-    // });
-    return {
-      'ABAX': null,
-      'MSFT': null,
-      'ABCB': null
-    };
+    d3.request.json('/api/allSymbols', (err, data) => {
+      if (err) throw err;
+      this.setState({ companies: data });
+      Object.keys(data).forEach( (val) => this.retrieveOneDatum(val) );
+    });
+    // return {
+    //   'ABAX': null,
+    //   'MSFT': null,
+    //   'ABCB': null
+    // };
   }
   retrieveOneDatum(oneCompany) {
     console.log('retrieving one datum: ' + oneCompany);	

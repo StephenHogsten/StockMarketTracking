@@ -30,8 +30,9 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
   * [X] client js (hardest one!)
 * [X] make app shell 
 * [X] sketch static outline for the page in React
-* [ ] what do they mean you need web sockets
-  * [ ] test a socket server
+* [X] what do they mean you need web sockets
+  * [X] test a socket server
+  * [X] make it read the current socket list
 * [X] figure out how to dynamically query for a time range
   * [X] first use one stock, and get one specific call
   * [X] make a function for it to work for multiple stocks
@@ -42,12 +43,12 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
   * [ ] move the legend out
   * [ ] be able to add / remove stocks
   * [ ] be able to choose a new time range
-  * [ ] handle edge case timing with removing symbols
-  * [ ] visual cue of someone else's update
 * [ ] clean up
   * [ ] make the pop-up display all open data (bold the active one)
   * [ ] merge the datasets together for smoother animation
-* [ ] make the company data API handle weird errors (RJI exists but doesn't return any data)
+  * [ ] handle edge case timing with removing symbols
+  * [ ] make the company data API handle weird errors (RJI exists but doesn't return any data, identify errors)
+  * [ ] visual cue of someone else's update
 
 ## Enhancement Ideas
 * [ ] save off specific set-ups to return to later

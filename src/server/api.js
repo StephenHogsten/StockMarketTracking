@@ -11,7 +11,8 @@ module.exports = (io) => {
   let symbolList = {
     'ABAX': null,
     'MSFT': null,
-    'ABCB': null
+    'ABCB': null,
+    'NEOG': null
   };
   io.on('connection', (socket) => {
     let p = Math.floor(1000*Math.random());
