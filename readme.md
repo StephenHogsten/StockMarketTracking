@@ -42,8 +42,9 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
 * [ ] make it interactable
   * [X] move the legend out
   * [X] be able to remove stocks
-  * [ ] be able to add stocks
-  * [ ] be able to choose a new time range
+  * [X] be able to add stocks
+  * [ ] be able to choose locked time ranges
+  * [ ] be able to choose custom time range
 * [ ] clean up
   * [ ] make it prettier
   * [ ] make the pop-up display all open data (bold the active one)
