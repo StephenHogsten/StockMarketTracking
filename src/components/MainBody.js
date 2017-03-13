@@ -54,7 +54,6 @@ class MainBody extends React.Component {
   retrieveData() {
     // go through all the symbols
     Object.keys(this.state.companies).forEach((oneCompany) => {
-      console.log('getting data for ' + oneCompany);
       if (this.state.companies[oneCompany]) return;
       //convert dates to offsets & build query string
       let queryString = querystring.stringify({
@@ -73,14 +72,11 @@ class MainBody extends React.Component {
         }
         // use React api to return a new state
         if (!this.state.dates) { 
-          console.log('setting dates');
           this.setState({dates: data.Dates}); 
         }
         let thisData = data.Elements[0].DataSeries.close.values;
         let newCompanies = Object.assign({}, this.state.companies);
         newCompanies[oneCompany] = thisData || "ERROR";
-        console.log('new companies:');
-        console.log(newCompanies);
         this.setState({companies: newCompanies});
       });
     });
