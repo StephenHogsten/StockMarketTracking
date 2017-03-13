@@ -1,11 +1,21 @@
 @import 'colors';
 
-.btn {
-  background-color: $primary;
+.button {
+  background-color: $secondary;
   color: $primary-text;
   min-height: 25px;
   min-width: 45px;
-  margin: 4px;
+  margin: 1px;
   float: left;
   @include core-flex;
+  &:hover {
+    background-color: $primary;
+  }
+  padding: 3px 5px 3px 5px;
+}
+
+.active-button {
+  @extend .button;
+  background-color: $highlight;
+  font-weight: bold;
 }

@@ -23,7 +23,7 @@ class AddButton extends React.Component {
       );
     }); 
     return (
-      <div> 
+      <div id='add-button'> 
         <div className={"search-bar"} key="search-bar">
           <input 
             type="text" 

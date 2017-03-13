@@ -36,13 +36,13 @@ $search-width: 200px;
   color: $primary-text;
   width: $search-width;
   border: 1px solid $primary-text;
-  background-color: $secondary;
+  background-color: $highlight;
   border-radius: 2px;
   padding-left: 3px;
   padding-right: 3px;
   cursor: pointer;
   &:hover {
-    background-color: white;
+    background-color: $secondary;
   }
   .matching-company-symbol {
     font-size: 13px;

@@ -46,6 +46,7 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
   * [ ] be able to choose locked time ranges
   * [ ] be able to choose custom time range
 * [ ] clean up
+  * [ ] the graph shouldn't be wrong if there's incomplete time data
   * [ ] make it prettier
   * [ ] make the pop-up display all open data (bold the active one)
   * [ ] handle not adding too many stocks

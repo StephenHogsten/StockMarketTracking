@@ -101,7 +101,8 @@ class MainBody extends React.Component {
     return (
       <div id='main-body'>
         <GraphButtons 
-          socket={this.state.socket}
+          fnStaticTimeChange={(daysBack) => this.staticTimeChange(daysBack)}
+          fnDynamimcTimeChange={(startDate, endDate) => this.dynamicTimeChange(startDate, endDate)}
           key="GraphButtons"
         />
         <Graph 
@@ -124,12 +125,30 @@ class MainBody extends React.Component {
         <AddButton 
           matchingCompanies={this.state.matchingCompanies}
           noMatchingCompanies={this.state.noMatchingCompanies}
-          fnSearchSymbols={(a, b, c) => this.fnSearchSymbols(a, b, c)}
+          fnSearchSymbols={(a, b, c) => this.searchSymbols(a, b, c)}
           fnAddCompany={(symbol, emit) => this.addCompany(symbol, emit)}
           key="AddButton"
         />
       </div>
     );
+  }
+
+  // used by GraphButtons
+  staticTimeChange(daysBack) {
+    if (daysBack === this.state.NumberOfDays) return;   // it's what we already have
+    let companyData = Object.assign({}, this.state.companies);
+    Object.keys(companyData).forEach( (val) => {
+      companyData[val] = null;
+    });
+    this.setState({ 
+      companies: companyData,     // wipe out company data to force us to wait to get more
+      NumberOfDays: daysBack 
+    });
+    this.retrieveAllData();
+  }
+  dynamicTimeChange(startDate, endDate) {
+    console.log(new Date(startDate));	
+    console.log(new Date(endDate));	
   }
 
   // used by Graph
@@ -152,7 +171,7 @@ class MainBody extends React.Component {
   }
 
   // used by AddButton
-  fnSearchSymbols(event) {
+  searchSymbols(event) {
     let symbol = encodeURIComponent(event.target.value.toUpperCase());
     if (!symbol) {
       this.setState({
@@ -176,6 +195,7 @@ class MainBody extends React.Component {
       }
     });
   }
+
 }
 
 module.exports = MainBody;

@@ -27,7 +27,7 @@
     opacity: 0; } }
 
 .my-header {
-  background-color: #e9dddd;
+  background-color: #739dcd;
   color: #3c5a5b;
   width: 100%;
   min-height: 35px;
@@ -108,12 +108,12 @@
   100% {
     opacity: 0; } }
 
-.btn {
-  background-color: #b8ccea;
+.button, .active-button {
+  background-color: #739dcd;
   color: #3c5a5b;
   min-height: 25px;
   min-width: 45px;
-  margin: 4px;
+  margin: 1px;
   float: left;
   display: -ms-flexbox;
   display: flex;
@@ -122,7 +122,14 @@
   -ms-flex-align: center;
   align-items: center;
   padding: 10px;
-  border-radius: 4px; }
+  border-radius: 4px;
+  padding: 3px 5px 3px 5px; }
+  .button:hover, .active-button:hover {
+    background-color: #b8ccea; }
+
+.active-button {
+  background-color: white;
+  font-weight: bold; }
 
 @keyframes fade-in {
   from {
@@ -175,13 +182,13 @@
   color: #3c5a5b;
   width: 200px;
   border: 1px solid #3c5a5b;
-  background-color: #e9dddd;
+  background-color: white;
   border-radius: 2px;
   padding-left: 3px;
   padding-right: 3px;
   cursor: pointer; }
   .matching-company:hover {
-    background-color: white; }
+    background-color: #739dcd; }
   .matching-company .matching-company-symbol {
     font-size: 13px;
     font-weight: bold; }
