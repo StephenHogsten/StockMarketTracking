@@ -7,8 +7,6 @@ const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 const bodyParser = require('body-parser');
 
-const apiRouter = require('./src/server/api.js');
-
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGO_URI, (err) => {
   // eslint-disable-next-line
@@ -17,6 +15,11 @@ mongoose.connect(process.env.MONGO_URI, (err) => {
 
 // initialize app
 const app = express();
+
+// create io
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const apiRouter = require('./src/server/api.js')(io);
 
 app.use('/api', apiRouter);
 app.use(bodyParser.urlencoded({extended: false}));
@@ -46,7 +49,7 @@ app.use((req, res) => {
 });
 
 const port = process.env.PORT;
-app.listen(port || 3000, () => {
+http.listen(port || 3000, () => {
   // eslint-disable-next-line
   console.log('listening on port ' + (port || 3000));
 });

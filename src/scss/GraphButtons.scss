@@ -1,0 +1,11 @@
+@import 'colors';
+
+.btn {
+  background-color: $primary;
+  color: $primary-text;
+  border-radius: 3px;
+  min-height: 15px;
+  min-width: 30px;
+  margin: 4px;
+  float: left;
+}

@@ -21,6 +21,15 @@
   max-height: 500px;
   background-color: rgba(255, 255, 255, 0.3); }
 
+.btn {
+  background-color: #b8ccea;
+  color: #3c5a5b;
+  border-radius: 3px;
+  min-height: 15px;
+  min-width: 30px;
+  margin: 4px;
+  float: left; }
+
 body {
   background-color: #dde0eb; }
 

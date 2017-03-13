@@ -39,8 +39,14 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
   * [X] make function accept mulitple quotes to query ( note: made it loop through state)
 * [X] display the data (note i just used chart.js again)
 * [ ] make it interactable
+  * [ ] move the legend out
   * [ ] be able to add / remove stocks
   * [ ] be able to choose a new time range
+  * [ ] handle edge case timing with removing symbols
+  * [ ] visual cue of someone else's update
+* [ ] clean up
+  * [ ] make the pop-up display all open data (bold the active one)
+  * [ ] merge the datasets together for smoother animation
 * [ ] make the company data API handle weird errors (RJI exists but doesn't return any data)
 
 ## Enhancement Ideas

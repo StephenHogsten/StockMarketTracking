@@ -1,7 +1,3 @@
-const querystring = require('querystring');
+const http = require('http');
 
-let k = {
-  a: 1,
-  b: 2
-};
-console.log(querystring.stringify(k));
+console.log(http.Server);
