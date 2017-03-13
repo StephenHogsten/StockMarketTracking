@@ -1,0 +1,58 @@
+@import 'colors';
+
+$search-width: 200px;
+
+.fa {
+  color: $primary-text;
+}
+
+.search-bar {
+  background-color: white;
+  width: $search-width;
+  @include core-flex;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.search-text {
+  border-style: none;
+  outline: none;
+}
+
+.matches-holder {
+  min-height: 250px;
+}
+.fade-away {
+  animation: fade-out 1s;
+  opacity: 0;
+}
+.fade-in {
+  animation: fade-in 1s;
+}
+
+.matching-company {
+  margin: auto;
+  min-height: 33px;
+  color: $primary-text;
+  width: $search-width;
+  border: 1px solid $primary-text;
+  background-color: $secondary;
+  border-radius: 2px;
+  padding-left: 3px;
+  padding-right: 3px;
+  cursor: pointer;
+  &:hover {
+    background-color: white;
+  }
+  .matching-company-symbol {
+    font-size: 13px;
+    font-weight: bold;
+  }
+  .matching-company-name {
+    font-size: 13px;
+  } 
+  .matching-company-exchange {
+    padding-left: 10px;
+    font-size: 12px;
+  }
+}

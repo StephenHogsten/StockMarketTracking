@@ -1,11 +1,5 @@
 @import 'colors';
 
-@keyframes fade-out {
-  0% {opacity: .85;}
-  25% {opacity: .85;}
-  100% {opacity: 0;}
-}
-
 #stock-graph {
   max-width: 1000px;
   max-height: 500px;

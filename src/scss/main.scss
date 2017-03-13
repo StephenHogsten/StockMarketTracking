@@ -1,8 +1,10 @@
 @import 'colors';
 @import 'header';
 @import 'footer';
-@import 'graph.scss';
-@import 'GraphButtons.scss';
+@import 'graph';
+@import 'GraphButtons';
+@import 'AddButton';
+@import 'font-awesome';
 
 body {
   background-color: $primary-background;

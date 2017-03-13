@@ -56,6 +56,17 @@ module.exports = (io) => {
   apiRouter.get('/allSymbols', (req, res) => {
     res.json(symbolList);
   });
+  apiRouter.get('/searchSymbol/:symbol', (req, res) => {
+    let baseApiUrl = "http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=";
+    let fullUrl = baseApiUrl + req.params.symbol;
+    console.log('fullUrl');
+    console.log(fullUrl);
+    apiHelper.get(fullUrl, (err, data) => {
+      if (err) throw err;
+      res.json(JSON.parse(data));
+      res.end();
+    });
+  });
 
   apiRouter.get('/tester', (req, res) => {
     res.send('success' + req.query.paa);

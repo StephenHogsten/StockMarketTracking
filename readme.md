@@ -47,7 +47,9 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
 * [ ] clean up
   * [ ] make it prettier
   * [ ] make the pop-up display all open data (bold the active one)
-  * [ ] merge the datasets together for smoother animation
+  * [ ] handle not adding too many stocks
+  * [ ] better control over redrawing graph
+  * [ ] handle too many search queries too quickly?
   * [ ] handle edge case timing with removing symbols
   * [ ] make the company data API handle weird errors (RJI exists but doesn't return any data, identify errors)
   * [ ] visual cue of someone else's update

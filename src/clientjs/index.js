@@ -7,7 +7,7 @@ const React = require('react'); // eslint-disable-line
 ReactDOM.render(
   <div>
     <Header title="Stock Watch" key="header" />
-    <MainBody />
+    <MainBody key="MainBody" />
     <Footer key="footer" />
   </div>
   , document.getElementById('react-shell')

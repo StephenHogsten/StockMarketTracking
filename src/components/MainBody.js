@@ -23,6 +23,8 @@ class MainBody extends React.Component {
       chart: null,
       chartPending: null,
       ctx: null,
+      matchingCompanies: [],
+      noMatchingCompanies: false,
       socket: socketio()
     };
     this.getCompanies();
@@ -78,8 +80,9 @@ class MainBody extends React.Component {
     }
     return true;
   }
-  addCompany(newSymbol) {
+  addCompany(newSymbol, emit) {
     newSymbol = newSymbol.toUpperCase();
+    if (emit) this.state.socket.emit('addCompanyClient', newSymbol);
     if (this.state.companies.hasOwnProperty(newSymbol)) return;
     let tempCompanies = Object.assign({}, this.state.companies);
     tempCompanies[newSymbol] = null;
@@ -87,6 +90,7 @@ class MainBody extends React.Component {
     this.setState({ companies: tempCompanies });
   }
   removeCompany(symbol, emit) {
+    symbol = symbol.toUpperCase();
     if (emit) this.state.socket.emit('removeCompanyClient', symbol);
     if (!this.state.companies.hasOwnProperty(symbol)) return;
     let tempCompanies = Object.assign({}, this.state.companies);
@@ -98,6 +102,7 @@ class MainBody extends React.Component {
       <div id='main-body'>
         <GraphButtons 
           socket={this.state.socket}
+          key="GraphButtons"
         />
         <Graph 
           companies={this.state.companies}
@@ -110,11 +115,19 @@ class MainBody extends React.Component {
           fnSetChart={(chart) => this.setChart(chart)}
           fnShouldMakeNewChart={() => this.shouldMakeNewChart()}
           fnRemoveCompany={(symbol, emit) => this.removeCompany(symbol, emit)}
+          key="Graph"
         />
         <CompanyHolder 
           companies={this.state.companies}
+          key="CompanyHolder"
         />
-        <AddButton />
+        <AddButton 
+          matchingCompanies={this.state.matchingCompanies}
+          noMatchingCompanies={this.state.noMatchingCompanies}
+          fnSearchSymbols={(a, b, c) => this.fnSearchSymbols(a, b, c)}
+          fnAddCompany={(symbol, emit) => this.addCompany(symbol, emit)}
+          key="AddButton"
+        />
       </div>
     );
   }
@@ -138,9 +151,30 @@ class MainBody extends React.Component {
     return true;
   }
 
-  // used by company holder
-  addLegendBox(chart) {
-    console.log(chart);
+  // used by AddButton
+  fnSearchSymbols(event) {
+    let symbol = encodeURIComponent(event.target.value.toUpperCase());
+    if (!symbol) {
+      this.setState({
+        noMatchingCompanies: false,
+        matchingCompanies: []
+      });
+      return;
+    }
+    d3.request.json('/api/searchSymbol/' + symbol, (err, data) => {
+      if (err) throw err;
+      if (data.length === 0) {
+        this.setState({
+          noMatchingCompanies: true,
+          matchingCompanies: []
+        });
+      } else {
+        this.setState({
+          noMatchingCompanies: false,
+          matchingCompanies: data
+        });
+      }
+    });
   }
 }
 
