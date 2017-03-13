@@ -3,3 +3,11 @@ $primary-background: #dde0eb;
 $primary: #b8ccea;
 $secondary: #e9dddd;
 $highlight: #739dcd;
+
+@mixin core-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 4px;
+}

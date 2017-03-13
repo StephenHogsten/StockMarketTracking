@@ -7,6 +7,8 @@ const d3 = {
   request: require('d3-request')
 };
 
+let normalDotSize = 4;
+
 class Graph extends React.Component {
   componentDidMount() {
     this.buildGraph();
@@ -25,8 +27,9 @@ class Graph extends React.Component {
         backgroundColor: d3.scale.schemeCategory20[idx],
         data: this.props.companies[symbol],
         spanGaps: true,
-        pointHoverRadius: 6,
-        pointRadius: 3.5
+        pointHitRadius: normalDotSize + 3,
+        pointRadius: normalDotSize,
+        pointHoverRadius: normalDotSize + 3
       });
     });
     return dataset;
@@ -51,11 +54,50 @@ class Graph extends React.Component {
           text: "Price at Close (USD)",
           position: 'left',
           padding: 5
+        },
+        legend: {
+          onHover: (event, legendItem) => {this.hoverOneBox(event, legendItem);},
+          onClick: (event, legendItem) => {this.handleClick(legendItem);}
         }
       }
     }));
     Chart.defaults.global.defaultFontColor = '#3C5A5B';
   }
+  handleClick(legendItem) {	
+    let previous = document.querySelector('.hover-text');
+    if (previous) previous.remove();
+    this.props.fnRemoveCompany(legendItem.text, true);
+  }
+  hoverOneBox(event, legendItem) {
+    let previous = document.querySelector('.hover-text');
+    if (previous) previous.remove();
+
+    let hoverText = document.createElement('div');
+    this.setupHoverText(hoverText, legendItem);
+    
+    let thisNode = this.props.chart.data.datasets[legendItem.datasetIndex];
+    this.boldOneLine(thisNode);
+    
+    thisNode.timeout = window.setTimeout(() => {
+      hoverText.remove();
+      thisNode.pointRadius = normalDotSize;
+      this.props.chart.update();
+    }, 1000);
+    
+  }
+  setupHoverText(hoverText, legendItem) {
+    hoverText.onclick = () => {this.handleClick(legendItem);};
+    hoverText.className = "hover-text";
+    hoverText.style.left = event.x + 'px';
+    hoverText.style.top = event.y + 'px';
+    hoverText.innerText = "Click to remove this symbol";
+    document.getElementById('stock-graph').parentElement.appendChild(hoverText);
+  }
+  boldOneLine(thisNode) {
+    window.clearTimeout(thisNode.timeout);
+    thisNode.pointRadius = normalDotSize + 2;
+    this.props.chart.update();
+  }  
   buildGraph() {
     if (!this.props.dates) {
       return;

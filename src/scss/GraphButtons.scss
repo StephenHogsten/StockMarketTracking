@@ -3,14 +3,9 @@
 .btn {
   background-color: $primary;
   color: $primary-text;
-  border-radius: 3px;
   min-height: 25px;
   min-width: 45px;
   margin: 4px;
   float: left;
-  //flexbox
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px
+  @include core-flex;
 }

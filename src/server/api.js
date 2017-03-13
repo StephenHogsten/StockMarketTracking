@@ -15,11 +15,13 @@ module.exports = (io) => {
     'NEOG': null
   };
   io.on('connection', (socket) => {
-    let p = Math.floor(1000*Math.random());
+    // let p = Math.floor(1000*Math.random());
     socket.on('addCompanyClient', (symbol) => {
+      console.log('add triggered: ' + symbol);	// eslint-disable-line
       io.emit('addCompanyServer', symbol.toUpperCase());  //we should validate it first
     });
     socket.on('removeCompanyClient', (symbol) => {
+      console.log('remove triggered: ' + symbol);	// eslint-disable-line
       io.emit('removeCompanyServer', symbol.toUpperCase());  //we should validate it first
     });
   });

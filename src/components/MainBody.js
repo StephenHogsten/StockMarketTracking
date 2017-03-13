@@ -29,46 +29,14 @@ class MainBody extends React.Component {
     this.state.socket.on('addCompanyServer', (data) => this.addCompany(data));
     this.state.socket.on('removeCompanyServer', (data) => this.removeCompany(data));
   }
-  addCompany(newSymbol) {
-    newSymbol = newSymbol.toUpperCase();
-    if (this.state.companies.hasOwnProperty(newSymbol)) return;
-    let tempCompanies = Object.assign({}, this.state.companies);
-    tempCompanies[newSymbol] = null;
-    this.retrieveOneDatum(newSymbol);
-    this.setState({ companies: tempCompanies });
-  }
-  removeCompany(symbol) {
-    symbol = symbol.toUpperCase();
-    if (!this.state.companies.hasOwnProperty(symbol)) return;
-    let tempCompanies = Object.assign({}, this.state.companies);
-    delete tempCompanies[symbol];
-    this.setState({ companies: tempCompanies });
-  }
-  setCtx() {
-    this.setState({ ctx: document.getElementById('stock-graph') });
-  }
-  setChart(chart) {
-    this.setState({ chart: chart });
-    this.setState({ chartPending: false });
-  }
-  shouldMakeNewChart() {
-    if (this.state.chart) {
-      return false;
-    }
-    if (this.state.chartPending) {
-      return false;
-    }
-    this.setState({ chartPending: true });
-    return true;
-  }
   getCompanies() {
     d3.request.json('/api/allSymbols', (err, data) => {
       if (err) throw err;
       this.setState({ companies: data });
-      Object.keys(data).forEach( (val) => this.retrieveOneDatum(val) );
+      Object.keys(data).forEach( (val) => this.retrieveOneCompanyData(val) );
     });
   }
-  retrieveOneDatum(oneCompany) {
+  retrieveOneCompanyData(oneCompany) {
     if (this.state.companies[oneCompany]) return;
     //build internal query string
     let queryString = querystring.stringify({
@@ -95,7 +63,7 @@ class MainBody extends React.Component {
   }
   retrieveAllData() {
     // go through all the symbols
-    Object.keys(this.state.companies).forEach((symbol) => this.retrieveOneDatum(symbol));
+    Object.keys(this.state.companies).forEach((symbol) => this.retrieveOneCompanyData(symbol));
   }
   shouldComponentUpdate(nextProps, nextState) {
     // wait until we have all the company data to render
@@ -109,6 +77,21 @@ class MainBody extends React.Component {
       }
     }
     return true;
+  }
+  addCompany(newSymbol) {
+    newSymbol = newSymbol.toUpperCase();
+    if (this.state.companies.hasOwnProperty(newSymbol)) return;
+    let tempCompanies = Object.assign({}, this.state.companies);
+    tempCompanies[newSymbol] = null;
+    this.retrieveOneCompanyData(newSymbol);
+    this.setState({ companies: tempCompanies });
+  }
+  removeCompany(symbol, emit) {
+    if (emit) this.state.socket.emit('removeCompanyClient', symbol);
+    if (!this.state.companies.hasOwnProperty(symbol)) return;
+    let tempCompanies = Object.assign({}, this.state.companies);
+    delete tempCompanies[symbol];
+    this.setState({ companies: tempCompanies });
   }
   render() {
     return (
@@ -126,11 +109,38 @@ class MainBody extends React.Component {
           fnSetCtx={() => this.setCtx()}
           fnSetChart={(chart) => this.setChart(chart)}
           fnShouldMakeNewChart={() => this.shouldMakeNewChart()}
+          fnRemoveCompany={(symbol, emit) => this.removeCompany(symbol, emit)}
         />
-        <CompanyHolder />
+        <CompanyHolder 
+          companies={this.state.companies}
+        />
         <AddButton />
       </div>
     );
+  }
+
+  // used by Graph
+  setCtx() {
+    this.setState({ ctx: document.getElementById('stock-graph') });
+  }
+  setChart(chart) {
+    this.setState({ chart: chart });
+    this.setState({ chartPending: false });
+  }
+  shouldMakeNewChart() {
+    if (this.state.chart) {
+      return false;
+    }
+    if (this.state.chartPending) {
+      return false;
+    }
+    this.setState({ chartPending: true });
+    return true;
+  }
+
+  // used by company holder
+  addLegendBox(chart) {
+    console.log(chart);
   }
 }
 

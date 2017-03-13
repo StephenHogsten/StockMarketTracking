@@ -44,11 +44,13 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
   * [ ] be able to add / remove stocks
   * [ ] be able to choose a new time range
 * [ ] clean up
+  * [ ] make it prettier
   * [ ] make the pop-up display all open data (bold the active one)
   * [ ] merge the datasets together for smoother animation
   * [ ] handle edge case timing with removing symbols
   * [ ] make the company data API handle weird errors (RJI exists but doesn't return any data, identify errors)
   * [ ] visual cue of someone else's update
+  * [ ] refactor
 
 ## Enhancement Ideas
 * [ ] save off specific set-ups to return to later

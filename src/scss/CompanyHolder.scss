@@ -1,0 +1,16 @@
+@import 'colors';
+
+.legend {
+  border-style: solid;
+  border-color: black;
+}
+
+.legend-box {
+  background-color: white;
+  float: left;
+  min-height: 60px;
+  min-width: 60px;
+  &:hover {
+    border-left: 3px, solid, black;
+  }
+}
