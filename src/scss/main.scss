@@ -1,3 +1,8 @@
+@import 'colors';
 @import 'header';
 @import 'footer';
 @import 'graph.scss';
+
+body {
+  background-color: $primary-background;
+}

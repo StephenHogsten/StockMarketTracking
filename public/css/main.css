@@ -1,6 +1,11 @@
-body {
-  background-color: #dde0eb;
-  color: #3c5a5b; }
+.my-header {
+  background-color: #e9dddd;
+  color: #3c5a5b;
+  width: 100%;
+  min-height: 35px;
+  margin: auto;
+  padding: 20px;
+  text-align: center; }
 
 .footer-bar {
   color: #3c5a5b; }
@@ -13,6 +18,10 @@ body {
 
 #stock-graph {
   max-width: 1000px;
-  max-height: 500px; }
+  max-height: 500px;
+  background-color: rgba(255, 255, 255, 0.3); }
 
-/*# sourceMappingURL=../../maps/main.css.map */
+body {
+  background-color: #dde0eb; }
+
+/*# sourceMappingURL=../maps/main.css.map */

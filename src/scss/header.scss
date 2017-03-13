@@ -1,8 +1,13 @@
 @import 'colors';
 
-body {
-  background-color: $primary-background;
+.my-header {
+  background-color: $secondary;
   color: $primary-text;
+  width: 100%;
+  min-height: 35px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
 }
 
 

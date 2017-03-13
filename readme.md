@@ -37,10 +37,7 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
   * [X] make a function for it to work for multiple stocks
   * [X] make the function accept a time range and get appropriate dates in the middle
   * [X] make function accept mulitple quotes to query ( note: made it loop through state)
-* [ ] display the data
-  * [ ] use d3 to appropriately add the points for a set amount of data
-  * [ ] add the legend and the axes / make it pretty
-  * [ ] add hover bubble
+* [X] display the data (note i just used chart.js again)
 * [ ] make it interactable
   * [ ] be able to add / remove stocks
   * [ ] be able to choose a new time range
