@@ -40,8 +40,9 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
   * [X] make function accept mulitple quotes to query ( note: made it loop through state)
 * [X] display the data (note i just used chart.js again)
 * [ ] make it interactable
-  * [ ] move the legend out
-  * [ ] be able to add / remove stocks
+  * [X] move the legend out
+  * [X] be able to remove stocks
+  * [ ] be able to add stocks
   * [ ] be able to choose a new time range
 * [ ] clean up
   * [ ] make it prettier
