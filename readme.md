@@ -44,8 +44,9 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
   * [X] be able to remove stocks
   * [X] be able to add stocks
   * [X] be able to choose locked time ranges
-  * [ ] be able to choose custom time range
+  * [X] be able to choose custom time range
   * [ ] display error for no matching symbols
+* [ ] deploy to heroku
 * [ ] clean up
   * [ ] time data
     * [ ] the graph shouldn't be wrong if there's incomplete time data
@@ -60,6 +61,7 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
   * [ ] handle edge case timing with removing symbols
   * [ ] make the company data API handle weird errors (RJI exists but doesn't return any data, identify errors)
   * [ ] visual cue of someone else's update
+  * [ ] default the button dates better
   * [ ] refactor
 
 ## Enhancement Ideas

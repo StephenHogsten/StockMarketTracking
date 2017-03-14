@@ -50,8 +50,6 @@ class MainBody extends React.Component {
       EndOffsetDays: EndOffsetDays,
       NumberOfDays: NumberOfDays
     });
-    console.log('queryString');
-    console.log(queryString);
     // request internal API info
     d3.request.json('/api/companyData?' + queryString, (err, data) => {
       if (err) throw err;
@@ -76,8 +74,6 @@ class MainBody extends React.Component {
   }
   retrieveAllData() {
     // go through all the symbols
-    console.log('all symbols');	
-    console.log(this.state);	
     Object.keys(this.state.companies).forEach((symbol) => this.retrieveOneCompanyData(symbol));
   }
   addCompany(newSymbol, emit) {
@@ -115,13 +111,11 @@ class MainBody extends React.Component {
       <div id='main-body'>
         <GraphButtons 
           fnStaticTimeChange={(daysBack) => this.staticTimeChange(daysBack)}
-          fnDynamimcTimeChange={(startDate, endDate) => this.dynamicTimeChange(startDate, endDate)}
+          fnDynamicTimeChange={(startDate, endDate) => this.dynamicTimeChange(startDate, endDate)}
           key="GraphButtons"
         />
         <Graph 
           companies={this.state.companies}
-          startDate={this.state.startDate}
-          endDate={this.state.endDate}
           dates={this.state.dates}
           ctx={this.state.ctx}
           chart={this.state.chart}
@@ -161,8 +155,20 @@ class MainBody extends React.Component {
     });
   }
   dynamicTimeChange(startDate, endDate) {
-    console.log(new Date(startDate));	
-    console.log(new Date(endDate));	
+    let EndOffsetDays = this.dateDiff(new Date(), endDate);
+    let NumberOfDays = this.dateDiff(endDate, startDate) + 1;
+    let companyData = Object.assign({}, this.state.companies);
+    this.setState({
+      dates: null,
+      EndOffsetDays: EndOffsetDays,
+      NumberOfDays: NumberOfDays
+    });
+    Object.keys(companyData).forEach( (val) => {
+      this.retrieveOneCompanyData(val, EndOffsetDays, NumberOfDays);
+    });
+  }
+  dateDiff(date1, date2) {
+    return Math.floor( (date1-date2) / 86400000 );
   }
 
   // used by Graph

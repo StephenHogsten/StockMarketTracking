@@ -2,9 +2,11 @@
 @import 'header';
 @import 'footer';
 @import 'graph';
+@import 'MainBody';
 @import 'GraphButtons';
 @import 'AddButton';
 @import 'font-awesome';
+@import '../../node_modules/pikaday/scss/pikaday';
 
 body {
   background-color: $primary-background;

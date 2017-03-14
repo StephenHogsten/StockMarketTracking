@@ -49,10 +49,12 @@ module.exports = (io) => {
     });
     apiHelper.get(baseApiUrl + encodeURIComponent(requestParams), (err, data) => {
       if (err) { console.log(err); res.end(); return; }
+      console.log(requestParams);
+      console.log(data);
       if (data.includes("Request blocked")) {
         res.json({ error: 'request blocked' });
       } else {
-        res.json(JSON.parse(data));
+        res.send(data);
       }
     });
   });

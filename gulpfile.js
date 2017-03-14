@@ -68,7 +68,7 @@ function setupOneBrowserify(filename) {
 }
 function bundleOneBrowserify(b) {
   let f = b.filename;
-  console.log('rebuilding client js: ' + f); // eslint-disable-line
+  console.log((new Date()).toTimeString() + ': rebuilding client js: ' + f); // eslint-disable-line
   b.bundle()
     .pipe(source(f))
     .pipe(buffer())

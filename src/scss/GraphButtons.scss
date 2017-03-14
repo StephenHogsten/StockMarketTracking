@@ -1,7 +1,14 @@
 @import 'colors';
 
+#graph-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  margin: 10px;
+}
+
 .button {
-  background-color: $secondary;
+  background-color: $primary;
   color: $primary-text;
   min-height: 25px;
   min-width: 45px;
@@ -9,7 +16,7 @@
   float: left;
   @include core-flex;
   &:hover {
-    background-color: $primary;
+    background-color: $secondary;
   }
   padding: 3px 5px 3px 5px;
 }
@@ -18,4 +25,8 @@
   @extend .button;
   background-color: $highlight;
   font-weight: bold;
+}
+
+input {
+  margin: 5px;
 }
