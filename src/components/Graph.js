@@ -7,7 +7,7 @@ const d3 = {
   request: require('d3-request')
 };
 
-let normalDotSize = 4;
+let normalDotSize = 2;
 
 class Graph extends React.Component {
   componentDidMount() {
@@ -27,9 +27,9 @@ class Graph extends React.Component {
         backgroundColor: d3.scale.schemeCategory20[idx],
         data: this.props.companies[symbol],
         spanGaps: true,
-        pointHitRadius: normalDotSize + 3,
-        pointRadius: normalDotSize,
-        pointHoverRadius: normalDotSize + 3
+        pointHitRadius: normalDotSize + 5,
+        pointRadius: 2,
+        pointHoverRadius: normalDotSize + 5
       });
     });
     return dataset;
@@ -110,7 +110,9 @@ class Graph extends React.Component {
       if (this.props.fnShouldMakeNewChart()) { this.newGraph(); }
       return;
     }
+    this.props.chart.data.labels =  this.makeDateLabels();
     this.props.chart.data.datasets = this.buildDatasets();
+    
     this.props.chart.update();
   }
   render() {

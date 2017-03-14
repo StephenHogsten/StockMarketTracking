@@ -1,3 +1,1 @@
-const http = require('http');
-
-console.log(http.Server);
+setTimeout( () => console.log('a'), 500);

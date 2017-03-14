@@ -43,10 +43,15 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
   * [X] move the legend out
   * [X] be able to remove stocks
   * [X] be able to add stocks
-  * [ ] be able to choose locked time ranges
+  * [X] be able to choose locked time ranges
   * [ ] be able to choose custom time range
+  * [ ] display error for no matching symbols
 * [ ] clean up
-  * [ ] the graph shouldn't be wrong if there's incomplete time data
+  * [ ] time data
+    * [ ] the graph shouldn't be wrong if there's incomplete time data
+    * [ ] space between days
+    * [ ] save off total time range
+    * [ ] block more clicks or something for clicking before we get the next data back
   * [ ] make it prettier
   * [ ] make the pop-up display all open data (bold the active one)
   * [ ] handle not adding too many stocks

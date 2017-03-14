@@ -16,9 +16,10 @@ class MainBody extends React.Component {
   constructor() {
     super();
     this.state = {
+      companyStatus: {},
       companies: {},
       EndOffsetDays: 0,   //default to last 90 days
-      NumberOfDays: 90,
+      NumberOfDays: 183,
       dates: null,         // this is tricky because we skip holidays and weekends
       chart: null,
       chartPending: null,
@@ -38,19 +39,29 @@ class MainBody extends React.Component {
       Object.keys(data).forEach( (val) => this.retrieveOneCompanyData(val) );
     });
   }
-  retrieveOneCompanyData(oneCompany) {
-    if (this.state.companies[oneCompany]) return;
+
+  retrieveOneCompanyData(oneCompany, EndOffsetDays, NumberOfDays, tries=0) {
+    if (tries > 10) return;     // give up after 10 retries
+    if (EndOffsetDays === null) { EndOffsetDays = this.state.EndOffsetDays;  }
+    if (NumberOfDays === null) { NumberOfDays = this.state.NumberOfDays;  }
     //build internal query string
     let queryString = querystring.stringify({
       Symbol: oneCompany,
-      EndOffsetDays: this.state.EndOffsetDays,
-      NumberOfDays: this.state.NumberOfDays
+      EndOffsetDays: EndOffsetDays,
+      NumberOfDays: NumberOfDays
     });
+    console.log('queryString');
+    console.log(queryString);
     // request internal API info
     d3.request.json('/api/companyData?' + queryString, (err, data) => {
       if (err) throw err;
       // check for error - NEEDS IMPROVEMENT
       if (data.hasOwnProperty('ExceptionType')) {
+        return;
+      }
+      if (data.error === 'request blocked') {
+        console.log('exceeded limit, trying again for ' + oneCompany);	
+        setTimeout( () => this.retrieveOneCompanyData(oneCompany, EndOffsetDays, NumberOfDays), 2500, tries+1);
         return;
       }
       // use React api to return a new state
@@ -65,20 +76,9 @@ class MainBody extends React.Component {
   }
   retrieveAllData() {
     // go through all the symbols
+    console.log('all symbols');	
+    console.log(this.state);	
     Object.keys(this.state.companies).forEach((symbol) => this.retrieveOneCompanyData(symbol));
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    // wait until we have all the company data to render
-    if (nextState.chartPending) {
-      return false;
-    }
-    let keys = Object.keys(nextState.companies);
-    for (let i=0; i<keys.length; i++) {
-      if (!nextState.companies[keys[i]]) {
-        return false;
-      }
-    }
-    return true;
   }
   addCompany(newSymbol, emit) {
     newSymbol = newSymbol.toUpperCase();
@@ -96,6 +96,19 @@ class MainBody extends React.Component {
     let tempCompanies = Object.assign({}, this.state.companies);
     delete tempCompanies[symbol];
     this.setState({ companies: tempCompanies });
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    // wait until we have all the company data to render
+    if (nextState.chartPending) {
+      return false;
+    }
+    let keys = Object.keys(nextState.companies);
+    for (let i=0; i<keys.length; i++) {
+      if (!nextState.companies[keys[i]]) {
+        return false;
+      }
+    }
+    return true;
   }
   render() {
     return (
@@ -135,16 +148,17 @@ class MainBody extends React.Component {
 
   // used by GraphButtons
   staticTimeChange(daysBack) {
+    console.log('time change triggered');	
     if (daysBack === this.state.NumberOfDays) return;   // it's what we already have
-    let companyData = Object.assign({}, this.state.companies);
-    Object.keys(companyData).forEach( (val) => {
-      companyData[val] = null;
-    });
     this.setState({ 
-      companies: companyData,     // wipe out company data to force us to wait to get more
+      dates: null,
+      EndOffsetDays: 0,
       NumberOfDays: daysBack 
     });
-    this.retrieveAllData();
+    let companyData = Object.assign({}, this.state.companies);
+    Object.keys(companyData).forEach( (val) => {
+      this.retrieveOneCompanyData(val, 0, daysBack);
+    });
   }
   dynamicTimeChange(startDate, endDate) {
     console.log(new Date(startDate));	

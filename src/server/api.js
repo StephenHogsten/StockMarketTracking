@@ -31,7 +31,7 @@ module.exports = (io) => {
   //  EndOffsetDays - number of days to look backwards (for the last day in our range)
   //  NumberOfDays - how many days are in our range
   apiRouter.get('/companyData', (req, res) => {
-    if (!req.query.Symbol) { res.json({ error: 'no symbol given'}); }
+    if (!req.query.Symbol) { res.json({ error: 'no symbol given'}); return; }
     // build external API url based on internal query parameters
     let baseApiUrl = "http://dev.markitondemand.com/MODApis/Api/v2/InteractiveChart/json?parameters=";
     let requestParams = JSON.stringify({
@@ -48,9 +48,12 @@ module.exports = (io) => {
       ]
     });
     apiHelper.get(baseApiUrl + encodeURIComponent(requestParams), (err, data) => {
-      if (err) throw err;
-      res.json(JSON.parse(data));
-      res.end();
+      if (err) { console.log(err); res.end(); return; }
+      if (data.includes("Request blocked")) {
+        res.json({ error: 'request blocked' });
+      } else {
+        res.json(JSON.parse(data));
+      }
     });
   });
   apiRouter.get('/allSymbols', (req, res) => {
@@ -59,11 +62,10 @@ module.exports = (io) => {
   apiRouter.get('/searchSymbol/:symbol', (req, res) => {
     let baseApiUrl = "http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=";
     let fullUrl = baseApiUrl + req.params.symbol;
-    console.log('fullUrl');
-    console.log(fullUrl);
     apiHelper.get(fullUrl, (err, data) => {
-      if (err) throw err;
-      res.json(JSON.parse(data));
+      if (err) { console.log(err); return; }
+      res.send(data);
+      // res.json(JSON.parse(data));
       res.end();
     });
   });
