@@ -84,11 +84,11 @@ class MainBody extends React.Component {
   }
   removeCompany(symbol, emit) {
     symbol = symbol.toUpperCase();
-    if (emit) this.state.socket.emit('removeCompanyClient', symbol);
     if (!this.state.companies.includes(symbol)) return;
     let tempCompanies = Object.assign([], this.state.companies);
-    tempCompanies.splice(tempCompanies.indexOf(symbol));
+    tempCompanies.splice(tempCompanies.indexOf(symbol), 1);
     this.setState({ companies: tempCompanies });
+    if (emit) this.state.socket.emit('removeCompanyClient', symbol);
   }
   shouldComponentUpdate(nextProps, nextState) {
     // wait until we have all the company data to render
