@@ -108,7 +108,7 @@ class GraphButtons extends React.Component {
     let thisYear = today.getFullYear();
     let momentFormat = 'MM/DD/YYYY';
     //start date
-    new Pikaday({
+    let start = new Pikaday({
       field: document.getElementById('start-date'),
       format: momentFormat,
       disableWeekends: true,
@@ -117,7 +117,7 @@ class GraphButtons extends React.Component {
       onSelect: () => this.setDynamicDates('start-date')
     });
     //end date
-    new Pikaday({
+    let end = new Pikaday({
       field: document.getElementById('end-date'),
       format: momentFormat,
       disableWeekends: true,
@@ -125,6 +125,11 @@ class GraphButtons extends React.Component {
       maxDate: today,
       onSelect: () => this.setDynamicDates('end-date')
     });
+    this.props.fnSetPickers(start, end);
+  }
+  componentDidUpdate() {
+    this.props.startPicker.setMoment(this.props.startDate, true);
+    this.props.endPicker.setMoment(this.props.endDate, true);
   }
 }
 

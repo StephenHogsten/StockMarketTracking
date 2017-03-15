@@ -22,6 +22,8 @@ class MainBody extends React.Component {
       companyCache: {},               // full time range data for all companies
       endDate: moment(),                // range is inclusive
       startDate: moment().subtract(90, 'days'),  // default to last 90 days
+      endPicker: null,
+      startPicker: null,
       chart: null,
       chartPending: null,
       ctx: null,
@@ -102,8 +104,11 @@ class MainBody extends React.Component {
         <GraphButtons 
           endDate={this.state.endDate}
           startDate={this.state.startDate}
+          endPicker={this.state.endPicker}
+          startPicker={this.state.startPicker}
           fnStaticTimeChange={(numberBack, unitsBack) => this.staticTimeChange(numberBack, unitsBack)}
           fnDynamicTimeChange={(startDate, endDate) => this.dynamicTimeChange(startDate, endDate)}
+          fnSetPickers={(start, end) => this.setPickers(start, end)}
           key="GraphButtons"
         />
         <Graph 
@@ -141,6 +146,12 @@ class MainBody extends React.Component {
     this.setState({
       endDate: moment(endDate),
       startDate: moment(startDate)
+    });
+  }
+  setPickers(startPicker, endPicker) {
+    this.setState({
+      startPicker: startPicker,
+      endPicker: endPicker
     });
   }
 
