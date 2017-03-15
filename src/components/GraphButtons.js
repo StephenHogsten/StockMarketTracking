@@ -5,7 +5,7 @@ const Pikaday = require('pikaday');
 // const moment = require('moment'); // eslint-disable-line
 
 class GraphButtons extends React.Component {
-  clickStaticButton(event, daysBack) {
+  clickStaticButton(event, numberBack, unitsBack='days') {
     // return if it's already selected
     let button = event.target;
     let lastClasses = button.className.split(' ');
@@ -16,7 +16,7 @@ class GraphButtons extends React.Component {
     lastClasses.push('active-button');
     button.classList = [lastClasses.join(' ')];
     // trigger the time range change
-    this.props.fnStaticTimeChange(daysBack);
+    this.props.fnStaticTimeChange(numberBack, unitsBack);
   }
   unselectAll() {
     let selected = document.getElementsByClassName('active-button')
@@ -46,39 +46,39 @@ class GraphButtons extends React.Component {
       <div id='graph-buttons' key="GraphButtons">
         <div id='set-times-container' key='set'>
           <div
-            id='last-10-years' 
-            key='last-10-years'
-            type="button"
-            className="button"
-            onClick={(event) => this.clickStaticButton(event, 10*365)}
-          >Last 10 Years</div>
-          <div
             id='last-5-years' 
             key='last-5-years'
             type="button"
             className="button"
-            onClick={(event) => this.clickStaticButton(event, 5*365)}
+            onClick={(event) => this.clickStaticButton(event, 5, 'years')}
           >Last 5 Years</div>
           <div
             id='last-year' 
             key='last-year'
             type="button"
             className="button"
-            onClick={(event) => this.clickStaticButton(event, 365)}
+            onClick={(event) => this.clickStaticButton(event, 1, 'years')}
           >Last Year</div>
           <div
             id='last-6-months' 
             key='last-6-months'
             type="button"
-            className={"button active-button"}
-            onClick={(event) => this.clickStaticButton(event, 183)}
+            className={"button"}
+            onClick={(event) => this.clickStaticButton(event, 6, 'months')}
           >Last 6 Months</div>
+          <div
+            id='last-90-days' 
+            key='last-90-days'
+            type="button"
+            className={"button active-button"}
+            onClick={(event) => this.clickStaticButton(event, 90)}
+          >Last 90 Days</div>
           <div
             id='last-month' 
             key='last-month'
             type="button"
             className="button"
-            onClick={(event) => this.clickStaticButton(event, 31)}
+            onClick={(event) => this.clickStaticButton(event, 1, 'months')}
           >Last Month</div>
         </div>
         <div id='custom-times-container' key='custom'>
@@ -86,13 +86,16 @@ class GraphButtons extends React.Component {
             id='start-date' 
             key='start-date' 
             placeholder='choose start date'
+            value={this.props.startDate.calendar()}
             readOnly
           >
           </input>
+          <span key='dash'>-</span>
           <input 
             id='end-date' 
             key='end-date' 
             placeholder='choose end date'
+            value={this.props.endDate.format('MM/DD/YYYY')}
             readOnly
           >
           </input>
@@ -122,11 +125,6 @@ class GraphButtons extends React.Component {
       maxDate: today,
       onSelect: () => this.setDynamicDates('end-date')
     });
-  }
-  componentDidUpdate() {
-    if (document.getElementsByClassName('active-button').length > 0) {
-      ['start-date', 'end-date'].forEach( (val) => document.getElementById(val).value = "" );
-    }
   }
 }
 

@@ -3,6 +3,7 @@
 const React = require('React');
 const querystring = require('querystring');
 const socketio = require('socket.io-client');
+const moment = require('moment');
 const d3 = {
   request: require('d3-request')
 };
@@ -15,108 +16,102 @@ const AddButton = require('../components/AddButton.js');          // eslint-disa
 class MainBody extends React.Component {
   constructor() {
     super();
+    let socket = socketio();
     this.state = {
-      companyStatus: {},
-      companies: {},
-      EndOffsetDays: 0,   //default to last 90 days
-      NumberOfDays: 183,
-      dates: null,         // this is tricky because we skip holidays and weekends
+      companies: [],                  // actively graphed getCompanies
+      companyCache: {},               // full time range data for all companies
+      endDate: moment(),                // range is inclusive
+      startDate: moment().subtract(90, 'days'),  // default to last 90 days
       chart: null,
       chartPending: null,
       ctx: null,
       matchingCompanies: [],
       noMatchingCompanies: false,
-      socket: socketio()
+      socket: socket,
     };
+    this.companyCache = {};   // symbol: { dates: [], values: [] }
+    this.pointsMax = 100;     // maximun No. points to draw for each company
+    this.maxTries = 5;
+    this.searchTimeout = null;
     this.getCompanies();
-    this.state.socket.on('addCompanyServer', (data) => this.addCompany(data));
-    this.state.socket.on('removeCompanyServer', (data) => this.removeCompany(data));
+    socket.on('addCompanyServer', (data) => this.addCompany(data));
+    socket.on('removeCompanyServer', (data) => this.removeCompany(data));
   }
   getCompanies() {
     d3.request.json('/api/allSymbols', (err, data) => {
       if (err) throw err;
       this.setState({ companies: data });
-      Object.keys(data).forEach( (val) => this.retrieveOneCompanyData(val) );
+      data.forEach( (val) => this.retrieveOneCompanyData(val) );
     });
   }
-
-  retrieveOneCompanyData(oneCompany, EndOffsetDays, NumberOfDays, tries=0) {
-    if (tries > 10) return;     // give up after 10 retries
-    if (EndOffsetDays === null) { EndOffsetDays = this.state.EndOffsetDays;  }
-    if (NumberOfDays === null) { NumberOfDays = this.state.NumberOfDays;  }
-    //build internal query string
+  retrieveOneCompanyData(oneCompany, tries=0) {
+    if (this.companyCache.hasOwnProperty(oneCompany)) return;
+    if (tries > this.maxTries) { console.log('max tries reach'); return; }
     let queryString = querystring.stringify({
       Symbol: oneCompany,
-      EndOffsetDays: EndOffsetDays,
-      NumberOfDays: NumberOfDays
+      EndOffsetDays: 0,
+      NumberOfDays: 3650
     });
-    // request internal API info
     d3.request.json('/api/companyData?' + queryString, (err, data) => {
-      if (err) throw err;
-      // check for error - NEEDS IMPROVEMENT
-      if (data.hasOwnProperty('ExceptionType')) {
-        return;
-      }
+      if (err) { console.log('error: ' + err); return; }
+      if (data.hasOwnProperty('ExceptionType')) { return; }
       if (data.error === 'request blocked') {
         console.log('exceeded limit, trying again for ' + oneCompany);	
-        setTimeout( () => this.retrieveOneCompanyData(oneCompany, EndOffsetDays, NumberOfDays), 2500, tries+1);
+        setTimeout( () => this.retrieveOneCompanyData(oneCompany, tries+1), 2500);
         return;
       }
-      // use React api to return a new state
-      if (!this.state.dates) { 
-        this.setState({dates: data.Dates}); 
-      }
-      let thisData = data.Elements[0].DataSeries.close.values;
-      let newCompanies = Object.assign({}, this.state.companies);
-      newCompanies[oneCompany] = thisData || "ERROR";
-      this.setState({companies: newCompanies});
+      let tempCompanyCache = Object.assign({}, this.state.companyCache);
+      tempCompanyCache[oneCompany] = {
+        dates: data.Dates.map((val) => moment(val)),
+        values: data.Elements[0].DataSeries.close.values
+      };
+      this.setState({ companyCache: tempCompanyCache });
     });
   }
-  retrieveAllData() {
+  retrieveAllCompanyData() {
     // go through all the symbols
-    Object.keys(this.state.companies).forEach((symbol) => this.retrieveOneCompanyData(symbol));
+    this.state.companies.forEach((symbol) => this.retrieveOneCompanyData(symbol));
   }
   addCompany(newSymbol, emit) {
     newSymbol = newSymbol.toUpperCase();
     if (emit) this.state.socket.emit('addCompanyClient', newSymbol);
-    if (this.state.companies.hasOwnProperty(newSymbol)) return;
-    let tempCompanies = Object.assign({}, this.state.companies);
-    tempCompanies[newSymbol] = null;
+    if (this.state.companies.includes(newSymbol)) return;
+    let tempCompanies = Object.assign([], this.state.companies);
+    tempCompanies.push(newSymbol);
     this.retrieveOneCompanyData(newSymbol);
     this.setState({ companies: tempCompanies });
   }
   removeCompany(symbol, emit) {
     symbol = symbol.toUpperCase();
     if (emit) this.state.socket.emit('removeCompanyClient', symbol);
-    if (!this.state.companies.hasOwnProperty(symbol)) return;
-    let tempCompanies = Object.assign({}, this.state.companies);
-    delete tempCompanies[symbol];
+    if (!this.state.companies.includes(symbol)) return;
+    let tempCompanies = Object.assign([], this.state.companies);
+    tempCompanies.splice(tempCompanies.indexOf(symbol));
     this.setState({ companies: tempCompanies });
   }
   shouldComponentUpdate(nextProps, nextState) {
     // wait until we have all the company data to render
     if (nextState.chartPending) {
       return false;
+    } else {
+      return true;
     }
-    let keys = Object.keys(nextState.companies);
-    for (let i=0; i<keys.length; i++) {
-      if (!nextState.companies[keys[i]]) {
-        return false;
-      }
-    }
-    return true;
   }
   render() {
     return (
       <div id='main-body'>
         <GraphButtons 
-          fnStaticTimeChange={(daysBack) => this.staticTimeChange(daysBack)}
+          endDate={this.state.endDate}
+          startDate={this.state.startDate}
+          fnStaticTimeChange={(numberBack, unitsBack) => this.staticTimeChange(numberBack, unitsBack)}
           fnDynamicTimeChange={(startDate, endDate) => this.dynamicTimeChange(startDate, endDate)}
           key="GraphButtons"
         />
         <Graph 
           companies={this.state.companies}
-          dates={this.state.dates}
+          companyCache={this.state.companyCache}
+          endDate={this.state.endDate}
+          startDate={this.state.startDate}
           ctx={this.state.ctx}
           chart={this.state.chart}
           fnSetCtx={() => this.setCtx()}
@@ -128,7 +123,7 @@ class MainBody extends React.Component {
         <AddButton 
           matchingCompanies={this.state.matchingCompanies}
           noMatchingCompanies={this.state.noMatchingCompanies}
-          fnSearchSymbols={(a, b, c) => this.searchSymbols(a, b, c)}
+          fnSearchSymbols={(event) => this.searchSymbolsTimeout(event)}
           fnAddCompany={(symbol, emit) => this.addCompany(symbol, emit)}
           key="AddButton"
         />
@@ -137,34 +132,17 @@ class MainBody extends React.Component {
   }
 
   // used by GraphButtons
-  staticTimeChange(daysBack) {
-    console.log('time change triggered');	
-    if (daysBack === this.state.NumberOfDays) return;   // it's what we already have
+  staticTimeChange(numberBack, unitsBack='days') {
     this.setState({ 
-      dates: null,
-      EndOffsetDays: 0,
-      NumberOfDays: daysBack 
-    });
-    let companyData = Object.assign({}, this.state.companies);
-    Object.keys(companyData).forEach( (val) => {
-      this.retrieveOneCompanyData(val, 0, daysBack);
+      endDate: moment(),
+      startDate: moment().subtract(numberBack, unitsBack)
     });
   }
   dynamicTimeChange(startDate, endDate) {
-    let EndOffsetDays = this.dateDiff(new Date(), endDate);
-    let NumberOfDays = this.dateDiff(endDate, startDate) + 1;
-    let companyData = Object.assign({}, this.state.companies);
     this.setState({
-      dates: null,
-      EndOffsetDays: EndOffsetDays,
-      NumberOfDays: NumberOfDays
+      endDate: moment(endDate),
+      startDate: moment(startDate)
     });
-    Object.keys(companyData).forEach( (val) => {
-      this.retrieveOneCompanyData(val, EndOffsetDays, NumberOfDays);
-    });
-  }
-  dateDiff(date1, date2) {
-    return Math.floor( (date1-date2) / 86400000 );
   }
 
   // used by Graph
@@ -187,7 +165,7 @@ class MainBody extends React.Component {
   }
 
   // used by AddButton
-  searchSymbols(event) {
+  searchSymbolsTimeout(event, delay=600) {
     let symbol = encodeURIComponent(event.target.value.toUpperCase());
     if (!symbol) {
       this.setState({
@@ -196,6 +174,10 @@ class MainBody extends React.Component {
       });
       return;
     }
+    clearTimeout( this.searchTimeout );
+    this.searchTimeout = setTimeout( () => this.searchSymbols(symbol), delay );   //keep from freaking out while typing
+  }
+  searchSymbols(symbol) {
     d3.request.json('/api/searchSymbol/' + symbol, (err, data) => {
       if (err) throw err;
       if (data.length === 0) {

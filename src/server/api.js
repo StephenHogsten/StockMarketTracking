@@ -8,20 +8,24 @@ module.exports = (io) => {
   let apiRouter = express.Router();
   
   // io events
-  let symbolList = {
-    'ABAX': null,
-    'MSFT': null,
-    'ABCB': null,
-    'NEOG': null
-  };
+  let symbolList = [
+    'ABAX',
+    'MSFT',
+    'ABCB',
+    'NEOG'
+  ];
   io.on('connection', (socket) => {
     // let p = Math.floor(1000*Math.random());
     socket.on('addCompanyClient', (symbol) => {
+      symbol = symbol.toUpperCase();
       console.log('add triggered: ' + symbol);	// eslint-disable-line
-      io.emit('addCompanyServer', symbol.toUpperCase());  //we should validate it first
+      symbolList.push(symbol);
+      io.emit('addCompanyServer', symbol);  //we should validate it first
     });
     socket.on('removeCompanyClient', (symbol) => {
+      symbol = symbol.toUpperCase();
       console.log('remove triggered: ' + symbol);	// eslint-disable-line
+      symbolList.splice(symbolList.indexOf(symbol), 1);
       io.emit('removeCompanyServer', symbol.toUpperCase());  //we should validate it first
     });
   });
@@ -49,8 +53,6 @@ module.exports = (io) => {
     });
     apiHelper.get(baseApiUrl + encodeURIComponent(requestParams), (err, data) => {
       if (err) { console.log(err); res.end(); return; }
-      console.log(requestParams);
-      console.log(data);
       if (data.includes("Request blocked")) {
         res.json({ error: 'request blocked' });
       } else {

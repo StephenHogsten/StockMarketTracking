@@ -8,7 +8,7 @@
 }
 
 .button {
-  background-color: $primary;
+  background-color: $primary-background;
   color: $primary-text;
   min-height: 25px;
   min-width: 45px;
@@ -16,14 +16,14 @@
   float: left;
   @include core-flex;
   &:hover {
-    background-color: $secondary;
+    background-color: $highlight;
   }
   padding: 3px 5px 3px 5px;
 }
 
 .active-button {
   @extend .button;
-  background-color: $highlight;
+  background-color: $primary;
   font-weight: bold;
 }
 

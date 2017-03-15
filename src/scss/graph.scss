@@ -4,19 +4,16 @@
   max-width: 1000px;
   max-height: 500px;
   background-color: rgba(255, 255, 255, .3);
+  margin: auto;
 }
 
 .hover-text {
   background-color: $primary;
-  position: fixed;
+  position: absolute;
   z-index: 50;
   min-width: 75px;
   min-height: 40px;
   @include core-flex;
   animation-name: fade-out;
   animation-duration: 1.5s;
-}
-
-canvas {
-  margin: auto;
 }
