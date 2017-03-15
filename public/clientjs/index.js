@@ -55108,11 +55108,11 @@ var MainBody = function (_React$Component) {
     key: 'removeCompany',
     value: function removeCompany(symbol, emit) {
       symbol = symbol.toUpperCase();
-      if (emit) this.state.socket.emit('removeCompanyClient', symbol);
       if (!this.state.companies.includes(symbol)) return;
       var tempCompanies = Object.assign([], this.state.companies);
-      tempCompanies.splice(tempCompanies.indexOf(symbol));
+      tempCompanies.splice(tempCompanies.indexOf(symbol), 1);
       this.setState({ companies: tempCompanies });
+      if (emit) this.state.socket.emit('removeCompanyClient', symbol);
     }
   }, {
     key: 'shouldComponentUpdate',

@@ -19,7 +19,7 @@ class GraphButtons extends React.Component {
     this.props.fnStaticTimeChange(numberBack, unitsBack);
   }
   unselectAll() {
-    let selected = document.getElementsByClassName('active-button')
+    let selected = document.getElementsByClassName('active-button');
     for (let i=0; i<selected.length; i++ ) {
       let classList = selected[i].className.split(' ');
       classList.splice(classList.indexOf('active-button'), 1);
