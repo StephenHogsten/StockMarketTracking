@@ -39,13 +39,13 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
   * [X] make the function accept a time range and get appropriate dates in the middle
   * [X] make function accept mulitple quotes to query ( note: made it loop through state)
 * [X] display the data (note i just used chart.js again)
-* [ ] make it interactable
+* [X] make it interactable
   * [X] move the legend out
   * [X] be able to remove stocks
   * [X] be able to add stocks
   * [X] be able to choose locked time ranges
   * [X] be able to choose custom time range
-  * [ ] display error for no matching symbols
+  * [X] display error for no matching symbols
 * [ ] deploy to heroku
 * [ ] clean up
   * [ ] time data
