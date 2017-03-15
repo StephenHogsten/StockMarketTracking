@@ -120,7 +120,6 @@ class Graph extends React.Component {
     
   }
   setupHoverText(event, hoverText, legendItem) {
-    console.log(event);
     hoverText.onclick = () => {this.handleClick(legendItem);};
     hoverText.className = "hover-text";
     hoverText.style.left = event.pageX + 'px';

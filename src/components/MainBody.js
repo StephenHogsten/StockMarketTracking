@@ -46,17 +46,16 @@ class MainBody extends React.Component {
   }
   retrieveOneCompanyData(oneCompany, tries=0) {
     if (this.companyCache.hasOwnProperty(oneCompany)) return;
-    if (tries > this.maxTries) { console.log('max tries reach'); return; }
+    if (tries > this.maxTries) { return; }
     let queryString = querystring.stringify({
       Symbol: oneCompany,
       EndOffsetDays: 0,
       NumberOfDays: 3650
     });
     d3.request.json('/api/companyData?' + queryString, (err, data) => {
-      if (err) { console.log('error: ' + err); return; }
+      if (err) { return; }
       if (data.hasOwnProperty('ExceptionType')) { return; }
       if (data.error === 'request blocked') {
-        console.log('exceeded limit, trying again for ' + oneCompany);	
         setTimeout( () => this.retrieveOneCompanyData(oneCompany, tries+1), 2500);
         return;
       }
@@ -166,6 +165,7 @@ class MainBody extends React.Component {
 
   // used by AddButton
   searchSymbolsTimeout(event, delay=600) {
+    clearTimeout( this.searchTimeout );
     let symbol = encodeURIComponent(event.target.value.toUpperCase());
     if (!symbol) {
       this.setState({
@@ -174,7 +174,6 @@ class MainBody extends React.Component {
       });
       return;
     }
-    clearTimeout( this.searchTimeout );
     this.searchTimeout = setTimeout( () => this.searchSymbols(symbol), delay );   //keep from freaking out while typing
   }
   searchSymbols(symbol) {
