@@ -63,6 +63,7 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
   * [ ] visual cue of someone else's update
   * [ ] default the button dates better
   * [ ] refactor
+  * [ ] clean out unnecessary logs
 
 ## Enhancement Ideas
 * [ ] save off specific set-ups to return to later
