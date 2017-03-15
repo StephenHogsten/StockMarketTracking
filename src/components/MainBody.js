@@ -125,10 +125,6 @@ class MainBody extends React.Component {
           fnRemoveCompany={(symbol, emit) => this.removeCompany(symbol, emit)}
           key="Graph"
         />
-        <CompanyHolder 
-          companies={this.state.companies}
-          key="CompanyHolder"
-        />
         <AddButton 
           matchingCompanies={this.state.matchingCompanies}
           noMatchingCompanies={this.state.noMatchingCompanies}

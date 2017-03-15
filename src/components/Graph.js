@@ -117,7 +117,7 @@ class Graph extends React.Component {
   }
   render() {
     return (
-      <canvas id='stock-graph' width="1000" height="500">
+      <canvas id='stock-graph' width="1000" height="500" key="Graph">
       </canvas>
     );
   }

@@ -6,22 +6,29 @@ const MatchingCompany = require('./MatchingCompany.js'); // eslint-disable-line
 
 class AddButton extends React.Component {
   render() {
+    let matches;
     // check for the error and no companies first
-    let matches = [];
-    this.props.matchingCompanies.forEach((val, idx) => {
-      //val should be object with Symbol, Name, Exchange
-      if (idx > 20) return;   // max 20 results
-      matches.push(
-        <MatchingCompany 
-          symbol={val.Symbol}
-          name={val.Name}
-          exchange={val.Exchange}
-          idx={idx}
-          fnClick={() => this.props.fnAddCompany(val.Symbol, true)}
-          key={val.Symbol + idx}
-        />
+    if (this.props.noMatchingCompanies) {
+      matches = (
+        <div className="no-matching-company">No Matching Companies</div>
       );
-    }); 
+    } else {
+      matches = [];
+      this.props.matchingCompanies.forEach((val, idx) => {
+        //val should be object with Symbol, Name, Exchange
+        if (idx > 20) return;   // max 20 results
+        matches.push(
+          <MatchingCompany 
+            symbol={val.Symbol}
+            name={val.Name}
+            exchange={val.Exchange}
+            idx={idx}
+            fnClick={() => this.props.fnAddCompany(val.Symbol, true)}
+            key={val.Symbol + idx}
+          />
+        );
+      }); 
+    }
     return (
       <div id='add-button'> 
         <div className={"search-bar"} key="search-bar">

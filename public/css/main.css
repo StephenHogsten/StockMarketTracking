@@ -163,7 +163,8 @@ canvas {
   font-weight: bold; }
 
 input {
-  margin: 5px; }
+  margin: 5px;
+  padding: 1px; }
 
 @keyframes fade-in {
   from {
@@ -210,7 +211,7 @@ input {
 .fade-in {
   animation: fade-in 1s; }
 
-.matching-company {
+.matching-company, .no-matching-company {
   margin: auto;
   min-height: 33px;
   color: #3c5a5b;
@@ -221,16 +222,29 @@ input {
   padding-left: 3px;
   padding-right: 3px;
   cursor: pointer; }
-  .matching-company:hover {
+  .matching-company:hover, .no-matching-company:hover {
     background-color: #739dcd; }
-  .matching-company .matching-company-symbol {
+  .matching-company .matching-company-symbol, .no-matching-company .matching-company-symbol {
     font-size: 13px;
     font-weight: bold; }
-  .matching-company .matching-company-name {
+  .matching-company .matching-company-name, .no-matching-company .matching-company-name {
     font-size: 13px; }
-  .matching-company .matching-company-exchange {
+  .matching-company .matching-company-exchange, .no-matching-company .matching-company-exchange {
     padding-left: 10px;
     font-size: 12px; }
+
+.no-matching-company {
+  background-color: indianred;
+  color: white;
+  cursor: unset;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-align: center;
+  align-items: center; }
+  .no-matching-company:hover {
+    background-color: indianred; }
 
 /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome

@@ -56,3 +56,16 @@ $search-width: 200px;
     font-size: 12px;
   }
 }
+
+.no-matching-company {
+  @extend .matching-company;
+  background-color: indianred;
+  color: white;
+  cursor: unset;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    background-color: indianred;
+  }
+}

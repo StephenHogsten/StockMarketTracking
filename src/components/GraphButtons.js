@@ -43,7 +43,7 @@ class GraphButtons extends React.Component {
   }
   render() {
     return (
-      <div id='graph-buttons'>
+      <div id='graph-buttons' key="GraphButtons">
         <div id='set-times-container' key='set'>
           <div
             id='last-10-years' 
