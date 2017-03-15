@@ -54890,7 +54890,7 @@ var GraphButtons = function (_React$Component) {
       var thisYear = today.getFullYear();
       var momentFormat = 'MM/DD/YYYY';
       //start date
-      new Pikaday({
+      var start = new Pikaday({
         field: document.getElementById('start-date'),
         format: momentFormat,
         disableWeekends: true,
@@ -54901,7 +54901,7 @@ var GraphButtons = function (_React$Component) {
         }
       });
       //end date
-      new Pikaday({
+      var end = new Pikaday({
         field: document.getElementById('end-date'),
         format: momentFormat,
         disableWeekends: true,
@@ -54911,6 +54911,13 @@ var GraphButtons = function (_React$Component) {
           return _this3.setDynamicDates('end-date');
         }
       });
+      this.props.fnSetPickers(start, end);
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      this.props.startPicker.setMoment(this.props.startDate, true);
+      this.props.endPicker.setMoment(this.props.endDate, true);
     }
   }]);
 
@@ -55001,6 +55008,8 @@ var MainBody = function (_React$Component) {
       companyCache: {}, // full time range data for all companies
       endDate: moment(), // range is inclusive
       startDate: moment().subtract(90, 'days'), // default to last 90 days
+      endPicker: null,
+      startPicker: null,
       chart: null,
       chartPending: null,
       ctx: null,
@@ -55126,11 +55135,16 @@ var MainBody = function (_React$Component) {
         React.createElement(GraphButtons, {
           endDate: this.state.endDate,
           startDate: this.state.startDate,
+          endPicker: this.state.endPicker,
+          startPicker: this.state.startPicker,
           fnStaticTimeChange: function fnStaticTimeChange(numberBack, unitsBack) {
             return _this5.staticTimeChange(numberBack, unitsBack);
           },
           fnDynamicTimeChange: function fnDynamicTimeChange(startDate, endDate) {
             return _this5.dynamicTimeChange(startDate, endDate);
+          },
+          fnSetPickers: function fnSetPickers(start, end) {
+            return _this5.setPickers(start, end);
           },
           key: 'GraphButtons'
         }),
@@ -55187,6 +55201,14 @@ var MainBody = function (_React$Component) {
       this.setState({
         endDate: moment(endDate),
         startDate: moment(startDate)
+      });
+    }
+  }, {
+    key: 'setPickers',
+    value: function setPickers(startPicker, endPicker) {
+      this.setState({
+        startPicker: startPicker,
+        endPicker: endPicker
       });
     }
 
