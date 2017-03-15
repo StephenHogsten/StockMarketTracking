@@ -54500,7 +54500,7 @@ var Footer = function (_React$Component) {
         React.createElement(
           'p',
           { className: 'footer-text', key: 'text' },
-          'Created special for you by HogDog Designs'
+          'Created just for you by HogDog Designs'
         )
       );
     }
@@ -54524,6 +54524,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var React = require('React');
 var Chart = require('chart.js');
+var moment = require('moment');
 var d3 = {
   scale: require('d3-scale'),
   axis: require('d3-axis'),
@@ -54547,6 +54548,19 @@ var Graph = function (_React$Component) {
       this.buildGraph();
     }
   }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps) {
+      if (nextProps.companies === this.props.companies && Object.keys(nextProps.companyCache).length === Object.keys(this.props.companyCache).length && nextProps.endDate == this.props.endDate && nextProps.startDate == this.props.startDate && this.props.chart && this.props.ctx) {
+        return false;
+      } // shouldn't update anything if it's all the same
+      return true;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return React.createElement('canvas', { id: 'stock-graph', width: '1000', height: '500', key: 'Graph' });
+    }
+  }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate() {
       this.buildGraph();
@@ -54557,14 +54571,25 @@ var Graph = function (_React$Component) {
       var _this2 = this;
 
       var dataset = [];
-      Object.keys(this.props.companies).map(function (symbol, idx) {
-        if (!_this2.props.companies[symbol]) return; // we don't have data yet
+      this.props.companies.map(function (symbol, idx) {
+        if (!_this2.props.companyCache[symbol]) return; // we don't have data yet
+        var oneCompanyData = [];
+        var oneCompanyDataAll = _this2.props.companyCache[symbol];
+        for (var i = 0, l = _this2.props.companyCache[symbol].dates.length; i < l; i++) {
+          var tempDate = moment(oneCompanyDataAll.dates[i]);
+          if (tempDate < _this2.props.startDate) continue;
+          if (tempDate > _this2.props.endDate) break;
+          oneCompanyData.push({
+            x: tempDate,
+            y: oneCompanyDataAll.values[i]
+          });
+        }
         dataset.push({
           label: symbol,
           fill: false,
           borderColor: d3.scale.schemeCategory20[idx],
           backgroundColor: d3.scale.schemeCategory20[idx],
-          data: _this2.props.companies[symbol],
+          data: oneCompanyData,
           spanGaps: true,
           pointHitRadius: normalDotSize + 5,
           pointRadius: 2,
@@ -54574,15 +54599,6 @@ var Graph = function (_React$Component) {
       return dataset;
     }
   }, {
-    key: 'makeDateLabels',
-    value: function makeDateLabels() {
-      return this.props.dates.map(function (val) {
-        val = val.split('T')[0].split('-');
-        val.push(val.shift());
-        return val.join('/');
-      });
-    }
-  }, {
     key: 'newGraph',
     value: function newGraph() {
       var _this3 = this;
@@ -54590,7 +54606,6 @@ var Graph = function (_React$Component) {
       this.props.fnSetChart(new Chart(this.props.ctx, {
         type: 'line',
         data: {
-          labels: this.makeDateLabels(),
           datasets: this.buildDatasets()
         },
         options: {
@@ -54607,6 +54622,17 @@ var Graph = function (_React$Component) {
             onClick: function onClick(event, legendItem) {
               _this3.handleClick(legendItem);
             }
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+              time: {
+                tooltipFormat: 'L',
+                displayFormats: {
+                  day: 'L'
+                }
+              }
+            }]
           }
         }
       }));
@@ -54628,7 +54654,7 @@ var Graph = function (_React$Component) {
       if (previous) previous.remove();
 
       var hoverText = document.createElement('div');
-      this.setupHoverText(hoverText, legendItem);
+      this.setupHoverText(event, hoverText, legendItem);
 
       var thisNode = this.props.chart.data.datasets[legendItem.datasetIndex];
       this.boldOneLine(thisNode);
@@ -54641,15 +54667,15 @@ var Graph = function (_React$Component) {
     }
   }, {
     key: 'setupHoverText',
-    value: function setupHoverText(hoverText, legendItem) {
+    value: function setupHoverText(event, hoverText, legendItem) {
       var _this5 = this;
 
       hoverText.onclick = function () {
         _this5.handleClick(legendItem);
       };
       hoverText.className = "hover-text";
-      hoverText.style.left = event.x + 'px';
-      hoverText.style.top = event.y + 'px';
+      hoverText.style.left = event.pageX + 'px';
+      hoverText.style.top = event.pageY + 'px';
       hoverText.innerText = "Click to remove this symbol";
       document.getElementById('stock-graph').parentElement.appendChild(hoverText);
     }
@@ -54663,9 +54689,6 @@ var Graph = function (_React$Component) {
   }, {
     key: 'buildGraph',
     value: function buildGraph() {
-      if (!this.props.dates) {
-        return;
-      }
       if (!this.props.ctx) {
         this.props.fnSetCtx();
         return; // this will retrigger update anyway
@@ -54676,15 +54699,9 @@ var Graph = function (_React$Component) {
         }
         return;
       }
-      this.props.chart.data.labels = this.makeDateLabels();
       this.props.chart.data.datasets = this.buildDatasets();
 
       this.props.chart.update();
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return React.createElement('canvas', { id: 'stock-graph', width: '1000', height: '500', key: 'Graph' });
     }
   }]);
 
@@ -54693,7 +54710,7 @@ var Graph = function (_React$Component) {
 
 module.exports = Graph;
 
-},{"React":25,"chart.js":32,"d3-axis":83,"d3-request":90,"d3-scale":91}],323:[function(require,module,exports){
+},{"React":25,"chart.js":32,"d3-axis":83,"d3-request":90,"d3-scale":91,"moment":140}],323:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -54719,7 +54736,9 @@ var GraphButtons = function (_React$Component) {
 
   _createClass(GraphButtons, [{
     key: 'clickStaticButton',
-    value: function clickStaticButton(event, daysBack) {
+    value: function clickStaticButton(event, numberBack) {
+      var unitsBack = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'days';
+
       // return if it's already selected
       var button = event.target;
       var lastClasses = button.className.split(' ');
@@ -54730,7 +54749,7 @@ var GraphButtons = function (_React$Component) {
       lastClasses.push('active-button');
       button.classList = [lastClasses.join(' ')];
       // trigger the time range change
-      this.props.fnStaticTimeChange(daysBack);
+      this.props.fnStaticTimeChange(numberBack, unitsBack);
     }
   }, {
     key: 'unselectAll',
@@ -54774,25 +54793,12 @@ var GraphButtons = function (_React$Component) {
           React.createElement(
             'div',
             {
-              id: 'last-10-years',
-              key: 'last-10-years',
-              type: 'button',
-              className: 'button',
-              onClick: function onClick(event) {
-                return _this2.clickStaticButton(event, 10 * 365);
-              }
-            },
-            'Last 10 Years'
-          ),
-          React.createElement(
-            'div',
-            {
               id: 'last-5-years',
               key: 'last-5-years',
               type: 'button',
               className: 'button',
               onClick: function onClick(event) {
-                return _this2.clickStaticButton(event, 5 * 365);
+                return _this2.clickStaticButton(event, 5, 'years');
               }
             },
             'Last 5 Years'
@@ -54805,7 +54811,7 @@ var GraphButtons = function (_React$Component) {
               type: 'button',
               className: 'button',
               onClick: function onClick(event) {
-                return _this2.clickStaticButton(event, 365);
+                return _this2.clickStaticButton(event, 1, 'years');
               }
             },
             'Last Year'
@@ -54816,12 +54822,25 @@ var GraphButtons = function (_React$Component) {
               id: 'last-6-months',
               key: 'last-6-months',
               type: 'button',
-              className: "button active-button",
+              className: "button",
               onClick: function onClick(event) {
-                return _this2.clickStaticButton(event, 183);
+                return _this2.clickStaticButton(event, 6, 'months');
               }
             },
             'Last 6 Months'
+          ),
+          React.createElement(
+            'div',
+            {
+              id: 'last-90-days',
+              key: 'last-90-days',
+              type: 'button',
+              className: "button active-button",
+              onClick: function onClick(event) {
+                return _this2.clickStaticButton(event, 90);
+              }
+            },
+            'Last 90 Days'
           ),
           React.createElement(
             'div',
@@ -54831,7 +54850,7 @@ var GraphButtons = function (_React$Component) {
               type: 'button',
               className: 'button',
               onClick: function onClick(event) {
-                return _this2.clickStaticButton(event, 31);
+                return _this2.clickStaticButton(event, 1, 'months');
               }
             },
             'Last Month'
@@ -54844,12 +54863,19 @@ var GraphButtons = function (_React$Component) {
             id: 'start-date',
             key: 'start-date',
             placeholder: 'choose start date',
+            value: this.props.startDate.calendar(),
             readOnly: true
           }),
+          React.createElement(
+            'span',
+            { key: 'dash' },
+            '-'
+          ),
           React.createElement('input', {
             id: 'end-date',
             key: 'end-date',
             placeholder: 'choose end date',
+            value: this.props.endDate.format('MM/DD/YYYY'),
             readOnly: true
           })
         )
@@ -54885,15 +54911,6 @@ var GraphButtons = function (_React$Component) {
           return _this3.setDynamicDates('end-date');
         }
       });
-    }
-  }, {
-    key: 'componentDidUpdate',
-    value: function componentDidUpdate() {
-      if (document.getElementsByClassName('active-button').length > 0) {
-        ['start-date', 'end-date'].forEach(function (val) {
-          return document.getElementById(val).value = "";
-        });
-      }
     }
   }]);
 
@@ -54934,7 +54951,9 @@ var Header = function (_React$Component) {
           'h1',
           null,
           this.props.title
-        )
+        ),
+        React.createElement('br', { key: 'br' }),
+        React.createElement('hr', { key: 'bar' })
       );
     }
   }]);
@@ -54958,6 +54977,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var React = require('React');
 var querystring = require('querystring');
 var socketio = require('socket.io-client');
+var moment = require('moment');
 var d3 = {
   request: require('d3-request')
 };
@@ -54975,24 +54995,28 @@ var MainBody = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (MainBody.__proto__ || Object.getPrototypeOf(MainBody)).call(this));
 
+    var socket = socketio();
     _this.state = {
-      companyStatus: {},
-      companies: {},
-      EndOffsetDays: 0, //default to last 90 days
-      NumberOfDays: 183,
-      dates: null, // this is tricky because we skip holidays and weekends
+      companies: [], // actively graphed getCompanies
+      companyCache: {}, // full time range data for all companies
+      endDate: moment(), // range is inclusive
+      startDate: moment().subtract(90, 'days'), // default to last 90 days
       chart: null,
       chartPending: null,
       ctx: null,
       matchingCompanies: [],
       noMatchingCompanies: false,
-      socket: socketio()
+      socket: socket
     };
+    _this.companyCache = {}; // symbol: { dates: [], values: [] }
+    _this.pointsMax = 100; // maximun No. points to draw for each company
+    _this.maxTries = 5;
+    _this.searchTimeout = null;
     _this.getCompanies();
-    _this.state.socket.on('addCompanyServer', function (data) {
+    socket.on('addCompanyServer', function (data) {
       return _this.addCompany(data);
     });
-    _this.state.socket.on('removeCompanyServer', function (data) {
+    socket.on('removeCompanyServer', function (data) {
       return _this.removeCompany(data);
     });
     return _this;
@@ -55006,62 +55030,57 @@ var MainBody = function (_React$Component) {
       d3.request.json('/api/allSymbols', function (err, data) {
         if (err) throw err;
         _this2.setState({ companies: data });
-        Object.keys(data).forEach(function (val) {
+        data.forEach(function (val) {
           return _this2.retrieveOneCompanyData(val);
         });
       });
     }
   }, {
     key: 'retrieveOneCompanyData',
-    value: function retrieveOneCompanyData(oneCompany, EndOffsetDays, NumberOfDays) {
+    value: function retrieveOneCompanyData(oneCompany) {
       var _this3 = this;
 
-      var tries = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+      var tries = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
-      if (tries > 10) return; // give up after 10 retries
-      if (EndOffsetDays === null) {
-        EndOffsetDays = this.state.EndOffsetDays;
+      if (this.companyCache.hasOwnProperty(oneCompany)) return;
+      if (tries > this.maxTries) {
+        return;
       }
-      if (NumberOfDays === null) {
-        NumberOfDays = this.state.NumberOfDays;
-      }
-      //build internal query string
       var queryString = querystring.stringify({
         Symbol: oneCompany,
-        EndOffsetDays: EndOffsetDays,
-        NumberOfDays: NumberOfDays
+        EndOffsetDays: 0,
+        NumberOfDays: 3650
       });
-      // request internal API info
       d3.request.json('/api/companyData?' + queryString, function (err, data) {
-        if (err) throw err;
-        // check for error - NEEDS IMPROVEMENT
+        if (err) {
+          return;
+        }
         if (data.hasOwnProperty('ExceptionType')) {
           return;
         }
         if (data.error === 'request blocked') {
-          console.log('exceeded limit, trying again for ' + oneCompany);
           setTimeout(function () {
-            return _this3.retrieveOneCompanyData(oneCompany, EndOffsetDays, NumberOfDays);
-          }, 2500, tries + 1);
+            return _this3.retrieveOneCompanyData(oneCompany, tries + 1);
+          }, 2500);
           return;
         }
-        // use React api to return a new state
-        if (!_this3.state.dates) {
-          _this3.setState({ dates: data.Dates });
-        }
-        var thisData = data.Elements[0].DataSeries.close.values;
-        var newCompanies = Object.assign({}, _this3.state.companies);
-        newCompanies[oneCompany] = thisData || "ERROR";
-        _this3.setState({ companies: newCompanies });
+        var tempCompanyCache = Object.assign({}, _this3.state.companyCache);
+        tempCompanyCache[oneCompany] = {
+          dates: data.Dates.map(function (val) {
+            return moment(val);
+          }),
+          values: data.Elements[0].DataSeries.close.values
+        };
+        _this3.setState({ companyCache: tempCompanyCache });
       });
     }
   }, {
-    key: 'retrieveAllData',
-    value: function retrieveAllData() {
+    key: 'retrieveAllCompanyData',
+    value: function retrieveAllCompanyData() {
       var _this4 = this;
 
       // go through all the symbols
-      Object.keys(this.state.companies).forEach(function (symbol) {
+      this.state.companies.forEach(function (symbol) {
         return _this4.retrieveOneCompanyData(symbol);
       });
     }
@@ -55070,9 +55089,9 @@ var MainBody = function (_React$Component) {
     value: function addCompany(newSymbol, emit) {
       newSymbol = newSymbol.toUpperCase();
       if (emit) this.state.socket.emit('addCompanyClient', newSymbol);
-      if (this.state.companies.hasOwnProperty(newSymbol)) return;
-      var tempCompanies = Object.assign({}, this.state.companies);
-      tempCompanies[newSymbol] = null;
+      if (this.state.companies.includes(newSymbol)) return;
+      var tempCompanies = Object.assign([], this.state.companies);
+      tempCompanies.push(newSymbol);
       this.retrieveOneCompanyData(newSymbol);
       this.setState({ companies: tempCompanies });
     }
@@ -55081,9 +55100,9 @@ var MainBody = function (_React$Component) {
     value: function removeCompany(symbol, emit) {
       symbol = symbol.toUpperCase();
       if (emit) this.state.socket.emit('removeCompanyClient', symbol);
-      if (!this.state.companies.hasOwnProperty(symbol)) return;
-      var tempCompanies = Object.assign({}, this.state.companies);
-      delete tempCompanies[symbol];
+      if (!this.state.companies.includes(symbol)) return;
+      var tempCompanies = Object.assign([], this.state.companies);
+      tempCompanies.splice(tempCompanies.indexOf(symbol));
       this.setState({ companies: tempCompanies });
     }
   }, {
@@ -55092,14 +55111,9 @@ var MainBody = function (_React$Component) {
       // wait until we have all the company data to render
       if (nextState.chartPending) {
         return false;
+      } else {
+        return true;
       }
-      var keys = Object.keys(nextState.companies);
-      for (var i = 0; i < keys.length; i++) {
-        if (!nextState.companies[keys[i]]) {
-          return false;
-        }
-      }
-      return true;
     }
   }, {
     key: 'render',
@@ -55110,8 +55124,10 @@ var MainBody = function (_React$Component) {
         'div',
         { id: 'main-body' },
         React.createElement(GraphButtons, {
-          fnStaticTimeChange: function fnStaticTimeChange(daysBack) {
-            return _this5.staticTimeChange(daysBack);
+          endDate: this.state.endDate,
+          startDate: this.state.startDate,
+          fnStaticTimeChange: function fnStaticTimeChange(numberBack, unitsBack) {
+            return _this5.staticTimeChange(numberBack, unitsBack);
           },
           fnDynamicTimeChange: function fnDynamicTimeChange(startDate, endDate) {
             return _this5.dynamicTimeChange(startDate, endDate);
@@ -55120,7 +55136,9 @@ var MainBody = function (_React$Component) {
         }),
         React.createElement(Graph, {
           companies: this.state.companies,
-          dates: this.state.dates,
+          companyCache: this.state.companyCache,
+          endDate: this.state.endDate,
+          startDate: this.state.startDate,
           ctx: this.state.ctx,
           chart: this.state.chart,
           fnSetCtx: function fnSetCtx() {
@@ -55140,8 +55158,8 @@ var MainBody = function (_React$Component) {
         React.createElement(AddButton, {
           matchingCompanies: this.state.matchingCompanies,
           noMatchingCompanies: this.state.noMatchingCompanies,
-          fnSearchSymbols: function fnSearchSymbols(a, b, c) {
-            return _this5.searchSymbols(a, b, c);
+          fnSearchSymbols: function fnSearchSymbols(event) {
+            return _this5.searchSymbolsTimeout(event);
           },
           fnAddCompany: function fnAddCompany(symbol, emit) {
             return _this5.addCompany(symbol, emit);
@@ -55155,42 +55173,21 @@ var MainBody = function (_React$Component) {
 
   }, {
     key: 'staticTimeChange',
-    value: function staticTimeChange(daysBack) {
-      var _this6 = this;
+    value: function staticTimeChange(numberBack) {
+      var unitsBack = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'days';
 
-      console.log('time change triggered');
-      if (daysBack === this.state.NumberOfDays) return; // it's what we already have
       this.setState({
-        dates: null,
-        EndOffsetDays: 0,
-        NumberOfDays: daysBack
-      });
-      var companyData = Object.assign({}, this.state.companies);
-      Object.keys(companyData).forEach(function (val) {
-        _this6.retrieveOneCompanyData(val, 0, daysBack);
+        endDate: moment(),
+        startDate: moment().subtract(numberBack, unitsBack)
       });
     }
   }, {
     key: 'dynamicTimeChange',
     value: function dynamicTimeChange(startDate, endDate) {
-      var _this7 = this;
-
-      var EndOffsetDays = this.dateDiff(new Date(), endDate);
-      var NumberOfDays = this.dateDiff(endDate, startDate) + 1;
-      var companyData = Object.assign({}, this.state.companies);
       this.setState({
-        dates: null,
-        EndOffsetDays: EndOffsetDays,
-        NumberOfDays: NumberOfDays
+        endDate: moment(endDate),
+        startDate: moment(startDate)
       });
-      Object.keys(companyData).forEach(function (val) {
-        _this7.retrieveOneCompanyData(val, EndOffsetDays, NumberOfDays);
-      });
-    }
-  }, {
-    key: 'dateDiff',
-    value: function dateDiff(date1, date2) {
-      return Math.floor((date1 - date2) / 86400000);
     }
 
     // used by Graph
@@ -55222,10 +55219,13 @@ var MainBody = function (_React$Component) {
     // used by AddButton
 
   }, {
-    key: 'searchSymbols',
-    value: function searchSymbols(event) {
-      var _this8 = this;
+    key: 'searchSymbolsTimeout',
+    value: function searchSymbolsTimeout(event) {
+      var _this6 = this;
 
+      var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 600;
+
+      clearTimeout(this.searchTimeout);
       var symbol = encodeURIComponent(event.target.value.toUpperCase());
       if (!symbol) {
         this.setState({
@@ -55234,15 +55234,24 @@ var MainBody = function (_React$Component) {
         });
         return;
       }
+      this.searchTimeout = setTimeout(function () {
+        return _this6.searchSymbols(symbol);
+      }, delay); //keep from freaking out while typing
+    }
+  }, {
+    key: 'searchSymbols',
+    value: function searchSymbols(symbol) {
+      var _this7 = this;
+
       d3.request.json('/api/searchSymbol/' + symbol, function (err, data) {
         if (err) throw err;
         if (data.length === 0) {
-          _this8.setState({
+          _this7.setState({
             noMatchingCompanies: true,
             matchingCompanies: []
           });
         } else {
-          _this8.setState({
+          _this7.setState({
             noMatchingCompanies: false,
             matchingCompanies: data
           });
@@ -55256,7 +55265,7 @@ var MainBody = function (_React$Component) {
 
 module.exports = MainBody;
 
-},{"../components/AddButton.js":319,"../components/CompanyHolder.js":320,"../components/Graph.js":322,"../components/GraphButtons.js":323,"React":25,"d3-request":90,"querystring":150,"socket.io-client":303}],326:[function(require,module,exports){
+},{"../components/AddButton.js":319,"../components/CompanyHolder.js":320,"../components/Graph.js":322,"../components/GraphButtons.js":323,"React":25,"d3-request":90,"moment":140,"querystring":150,"socket.io-client":303}],326:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();

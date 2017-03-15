@@ -46,24 +46,26 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
   * [X] be able to choose locked time ranges
   * [X] be able to choose custom time range
   * [X] display error for no matching symbols
-* [ ] deploy to heroku
-* [ ] clean up
-  * [ ] time data
-    * [ ] the graph shouldn't be wrong if there's incomplete time data
-    * [ ] space between days
-    * [ ] save off total time range
-    * [ ] block more clicks or something for clicking before we get the next data back
-  * [ ] make it prettier
-  * [ ] make the pop-up display all open data (bold the active one)
-  * [ ] handle not adding too many stocks
-  * [ ] better control over redrawing graph
-  * [ ] handle too many search queries too quickly?
-  * [ ] handle edge case timing with removing symbols
-  * [ ] make the company data API handle weird errors (RJI exists but doesn't return any data, identify errors)
-  * [ ] visual cue of someone else's update
-  * [ ] default the button dates better
-  * [ ] refactor
+* [X] deploy to heroku
+* [X] clean up round 1
+  * [X] time data
+    * [X] the graph shouldn't be wrong if there's incomplete time data
+    * [X] space between days
+    * [X] save off total time range
+    * [X] block more clicks or something for clicking before we get the next data back
+  * [X] make it prettier
+  * [X] better control over redrawing graph
+  * [X] handle too many search queries too quickly?
+  * [X] default the button dates better
+* [X] clean up round 2
+  * [X] refactor if necessary
+  * [X] clean out unnecessary logs
 
 ## Enhancement Ideas
 * [ ] save off specific set-ups to return to later
 * [ ] ability to zoom and drag on graph
+* [ ] handle not adding too many stocks (i.e. max of 100 dates added)
+* [ ] make the company data API handle weird errors (RJI exists but doesn't return any data, identify errors)
+* [ ] handle edge case timing with removing symbols
+* [ ] make the pop-up display all open data (bold the active one)
+* [ ] visual cue of someone else's update

@@ -1,7 +1,7 @@
 @import 'colors';
 
 .my-header {
-  background-color: $secondary;
+  background-color: $primary-background;
   color: $primary-text;
   width: 100%;
   min-height: 35px;
@@ -10,4 +10,6 @@
   text-align: center;
 }
 
-
+hr {
+  color: $primary-text
+}
