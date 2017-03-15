@@ -1,6 +1,6 @@
 .env
 node_modules/
-public/clientjs/
-public/css/
+# public/clientjs/
+# public/css/
 public/maps/
 tester.js
