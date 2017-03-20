@@ -60,6 +60,7 @@ This is for the FreeCodeCamp [Chart the Stock Market](https://www.freecodecamp.c
 * [X] clean up round 2
   * [X] refactor if necessary
   * [X] clean out unnecessary logs
+* [ ] check on mobile 
 
 ## Enhancement Ideas
 * [ ] save off specific set-ups to return to later
